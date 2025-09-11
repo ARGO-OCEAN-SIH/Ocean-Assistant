@@ -1,12 +1,21 @@
-import { useState } from 'react'
-import './App.css'
+
+import './App.css';
+import Home from './pages/Home';
+import VoiceAssistant from './pages/VoiceAssistant';
+import React, { useState } from 'react';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [voiceMode, setVoiceMode] = useState(false);
 
   return (
-   <></>
-  )
+    <div className="App">
+      {voiceMode ? (
+        <VoiceAssistant onSwitchToChat={() => setVoiceMode(false)} />
+      ) : (
+        <Home onSwitchToVoice={() => setVoiceMode(true)} />
+      )}
+    </div>
+  );
 }
 
-export default App
+export default App;
