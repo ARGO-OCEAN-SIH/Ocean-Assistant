@@ -54,5 +54,5 @@ A voice-enabled AI assistant that democratizes access to oceanographic data from
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-org/ocean-voice-assistant.git
-   cd ocean-voice-assistant
+   git clone https://github.com/your-org/Ocean-Assistant.git
+   cd Ocean-Assistant
