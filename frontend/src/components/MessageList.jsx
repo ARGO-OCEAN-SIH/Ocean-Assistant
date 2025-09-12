@@ -13,21 +13,32 @@ const messages = [
   { id: 10, text: 'The average ocean temperature has risen by 0.13°C per decade.', sender: 'system' },
   { id: 11, text: 'That is concerning. What can be done?', sender: 'user' },
   { id: 12, text: 'Reducing carbon emissions and protecting marine ecosystems are key steps.', sender: 'system' },
-    { id: 13, text: 'Got it. Thanks for the info!', sender: 'user' },
-    { id: 14, text: 'Anytime! Let me know if you need more data.', sender: 'system' },
-    { id: 15, text: 'Will do. Bye for now!', sender: 'user' },
-    { id: 16, text: 'Goodbye! 🌊', sender: 'system' },
-    
+  { id: 13, text: 'Got it. Thanks for the info!', sender: 'user' },
+  { id: 14, text: 'Anytime! Let me know if you need more data.', sender: 'system' },
+  { id: 15, text: 'Will do. Bye for now!', sender: 'user' },
+  { id: 16, text: 'Goodbye! 🌊', sender: 'system' },
 ];
 
 const MessageList = () => (
-  <div className="message-list">
+  <div className="flex flex-col gap-3 w-full px-1 overflow-y-auto">
     {messages.map(msg => (
       <div
         key={msg.id}
-        className={`message-bubble ${msg.sender === 'user' ? 'user-msg' : 'system-msg'}`}
+        className={`
+          flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}
+        `}
       >
-        {msg.text}
+        <div
+          className={`
+            max-w-[80%] break-words rounded-2xl px-5 py-3 
+            text-base md:text-lg shadow-lg transition-all
+            ${msg.sender === 'user'
+              ? 'bg-gradient-to-br from-cyan-700 via-blue-700 to-sky-600 border-2 border-cyan-400 text-cyan-50 neon-shadow-user'
+              : 'bg-gradient-to-br from-blue-900 via-blue-800 to-slate-900/80 border-2 border-cyan-700/70 text-cyan-200 neon-shadow-system'}
+          `}
+        >
+          {msg.text}
+        </div>
       </div>
     ))}
   </div>
