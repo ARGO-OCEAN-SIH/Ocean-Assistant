@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,6 +26,10 @@ SECRET_KEY = 'django-insecure-^*72)t7fdk4mq3_ijcpy9^d&l!)7l+$a)%w=(!c7krp+%5+ul-
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+from dotenv import load_dotenv
+load_dotenv()
+OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY', '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')
 
 
 # Application definition

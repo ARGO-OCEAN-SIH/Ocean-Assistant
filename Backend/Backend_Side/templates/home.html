@@ -1,219 +1,175 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home - My Site</title>
     <style>
-        /* Reset default margins */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: Arial, sans-serif;
-    background: #f9f9f9;
-    color: #333;
-}
-
-/* Navbar */
-nav {
-    background-color: #2c3e50;
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 30px;
-}
-
-nav .logo {
-    font-size: 22px;
-    font-weight: bold;
-}
-
-nav .nav-links {
-    list-style: none;
-    display: flex;
-    gap: 20px;
-}
-
-nav .nav-links li a {
-    color: white;
-    text-decoration: none;
-    font-weight: 500;
-    transition: 0.3s;
-}
-
-nav .nav-links li a:hover {
-    color: #1abc9c;
-}
-
-/* Hero Section */
-.hero {
-    text-align: center;
-    padding: 80px 20px;
-    background: linear-gradient(to right, #1abc9c, #16a085);
-    color: white;
-}
-
-.hero h1 {
-    font-size: 40px;
-    margin-bottom: 15px;
-}
-
-.hero p {
-    font-size: 18px;
-}
-
+      /* Reset default margins */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      body {
+        font-family: Arial, sans-serif;
+        background: #f9f9f9;
+        color: #333;
+      }
+      
+      /* Navbar */
+      nav {
+        background-color: #2c3e50;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 30px;
+      }
+      
+      nav .logo {
+        font-size: 22px;
+        font-weight: bold;
+      }
+      
+      nav .nav-links {
+        list-style: none;
+        display: flex;
+        gap: 20px;
+      }
+      
+      nav .nav-links li a {
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+        transition: 0.3s;
+      }
+      
+      nav .nav-links li a:hover {
+        color: #1abc9c;
+      }
+      
+      /* Hero Section */
+      .hero {
+        text-align: center;
+        padding: 80px 20px;
+        background: linear-gradient(to right, #1abc9c, #16a085);
+        color: white;
+      }
+      
+      .hero h1 {
+        font-size: 40px;
+        margin-bottom: 15px;
+      }
+      
+      .hero p {
+        font-size: 18px;
+        margin-bottom: 20px;
+      }
+      
+      /* Messages */
+      .messages {
+        padding: 15px;
+        margin: 10px 0;
+      }
+      
+      .success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <!-- Navigation Bar -->
     <nav>
-        <div class="logo">MySite</div>
-        <ul class="nav-links">
-            <li><a href="#">Home</a></li>
-            <li><a href="{% url 'backend:register' %}">Register</a></li>
-            <li><a href="{% url 'backend:login' %}">Login</a></li>
-        </ul>
+      <div class="logo">MySite</div>
+      <ul class="nav-links">
+        <li>
+          <a href="{% url 'backend:home' %}">Home</a>
+        </li>
+        <li>
+          <a href="{% url 'backend:register' %}">Register</a>
+        </li>
+        <li>
+          <a href="{% url 'backend:login' %}">Login</a>
+        </li>
+      </ul>
     </nav>
+
+    <!-- Display messages -->
+    {% if messages %}
+      <div class="messages">
+        {% for message in messages %}
+          <div class="{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
 
     <!-- Hero Section -->
     <section class="hero">
-        <h1>Welcome to MySite</h1>
-        <p>Explore ocean of possibilities with Django 🚀</p>
-          <!-- Floating Voice Button -->
-  <button id="voiceBtn" class="voice-btn">
-    🎤click
-  </button>
-<script>
-let ws;
-let mediaRecorder;
-let isRecording = false;
-const voiceBtn = document.getElementById("voiceBtn");
-
-voiceBtn.addEventListener("click", () => {
-  if (!isRecording) {
-    startRecording();
-  } else {
-    stopRecording();
-  }
-});
-
-async function startRecording() {
-  ws = new WebSocket("ws://localhost:8000/ws/audio/");
-
-  ws.onopen = () => {
-    console.log("✅ WebSocket connected");
-    ws.send(JSON.stringify({ action: "start_stream", format: "webm" }));
-  };
-
-  ws.onmessage = (event) => {
-    console.log("📩 From server:", event.data);
-    const msg = JSON.parse(event.data);
-    if (msg.status === "transcription") {
-      alert("📝 Transcribed: " + msg.text);
-    }
-  };
-
-  ws.onclose = () => {
-    console.log("❌ WebSocket closed");
-  };
-
-  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-  mediaRecorder = new MediaRecorder(stream, { mimeType: "audio/webm; codecs=opus" });
-
-  mediaRecorder.ondataavailable = async (e) => {
-    console.log("🎤 Chunk size:", e.data.size);
-    if (e.data.size > 0 && ws.readyState === WebSocket.OPEN) {
-      const buffer = await e.data.arrayBuffer();
-      ws.send(buffer); // send raw binary audio
-    }
-  };
-
-  mediaRecorder.start(250);
-  isRecording = true;
-  voiceBtn.classList.add("recording");
-  console.log("🎙️ Recording started");
-}
-
-function stopRecording() {
-  if (mediaRecorder) {
-    mediaRecorder.stop();
-  }
-  if (ws && ws.readyState === WebSocket.OPEN) {
-    ws.send(JSON.stringify({ action: "stop_stream" }));
-    // do NOT close immediately — wait for server transcription response
-  }
-  isRecording = false;
-  voiceBtn.classList.remove("recording");
-  console.log("🛑 Recording stopped");
-}
-</script>
-{% comment %} 
-  <script>
-    let ws;
-    let mediaRecorder;
-    let isRecording = false;
-
-    const voiceBtn = document.getElementById("voiceBtn");
-
-    voiceBtn.addEventListener("click", async () => {
-      if (!isRecording) {
-        startRecording();
-      } else {
-        stopRecording();
-      }
-    });
-
-    async function startRecording() {
-      // Connect to WebSocket
-      ws = new WebSocket("ws://localhost:8000/ws/audio/");
+      <h1>Welcome to MySite</h1>
+      <p>Explore ocean of possibilities with Django 🚀</p>
       
-      ws.onopen = () => {
-        console.log("✅ WebSocket connected");
-        ws.send(JSON.stringify({ action: "start_stream" }));
-      };
+      <!-- Floating Voice Button -->
+      <button id="start">Start Recording</button>
+      <button id="stop" disabled>Stop Recording</button>
+      <div id="transcript" style="margin-top: 20px; background: white; color: black; padding: 10px; border-radius: 5px;"></div>
+    </section>
 
-      ws.onmessage = (event) => {
-        console.log("📩 From server:", event.data);
-      };
-
-      ws.onclose = () => {
-        console.log("❌ WebSocket closed");
-      };
-
-      // Ask for microphone access
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      mediaRecorder = new MediaRecorder(stream);
-
-      mediaRecorder.ondataavailable = (e) => {
-        if (e.data.size > 0 && ws.readyState === WebSocket.OPEN) {
-          ws.send(e.data);  // send raw audio chunks to backend
+    <script>
+      let mediaRecorder;
+      let audioChunks = [];
+      
+      document.getElementById('start').onclick = async () => {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          mediaRecorder = new MediaRecorder(stream);
+          audioChunks = [];
+      
+          mediaRecorder.ondataavailable = (event) => {
+            audioChunks.push(event.data);
+          };
+      
+          mediaRecorder.start();
+          document.getElementById('start').disabled = true;
+          document.getElementById('stop').disabled = false;
+        } catch (error) {
+          console.error("Error accessing microphone:", error);
+          alert("Could not access microphone. Please check permissions.");
         }
       };
-
-      mediaRecorder.start(250); // send every 250ms
-      isRecording = true;
-      voiceBtn.classList.add("recording");
-      console.log("🎙️ Recording started");
-    }
-
-    function stopRecording() {
-      if (mediaRecorder) {
+      
+      document.getElementById('stop').onclick = () => {
         mediaRecorder.stop();
-      }
-      if (ws && ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify({ action: "stop_stream" }));
-        ws.close();
-      }
-      isRecording = false;
-      voiceBtn.classList.remove("recording");
-      console.log("🛑 Recording stopped");
-    }
-  </script> {% endcomment %}
-    </section>
-</body>
+        document.getElementById('start').disabled = false;
+        document.getElementById('stop').disabled = true;
+      
+        mediaRecorder.onstop = async () => {
+          const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+          const formData = new FormData();
+          formData.append('file', audioBlob, 'input.webm');
+      
+          try {
+            const response = await fetch('/upload-audio/', {
+              method: 'POST',
+              body: formData
+            });
+            
+            const data = await response.json();
+            if (data.text) {
+              document.getElementById('transcript').innerText = data.text;
+            } else if (data.error) {
+              console.error("Error:", data.error);
+              alert("Error processing audio: " + data.error);
+            }
+          } catch (error) {
+            console.error("Upload error:", error);
+            alert("Error uploading audio");
+          }
+        };
+      };
+    </script>
+  </body>
 </html>

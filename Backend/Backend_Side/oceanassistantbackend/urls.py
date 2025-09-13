@@ -8,7 +8,8 @@ urlpatterns = [
     path('home/', views.Home.as_view(), name='home'),
     path('register/', views.Register.as_view(), name='register'),
     path('login/', views.Login.as_view(), name='login'),
-        path("api/voice/status/", views_api.get_voice_status),
+    path("api/voice/status/", views_api.get_voice_status),
     path("api/voice/control/", views_api.control_voice_engine),
     path("api/health/", views_api.health_check),
+    path("upload-audio/", views.upload_audio, name="upload_audio")
 ]
