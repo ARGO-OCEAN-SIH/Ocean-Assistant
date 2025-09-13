@@ -2,7 +2,7 @@
 
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue)](https://python.org)
 [![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
-[![Hackathon](https://img.shields.io/badge/Hackathon-SIH_2024-orange)](https://sih.gov.in)
+[![Hackathon](https://img.shields.io/badge/Hackathon-SIH_2025-orange)](https://sih.gov.in)
 
 A voice-enabled AI assistant that democratizes access to oceanographic data from Argo floats using natural language commands.
 
@@ -54,5 +54,5 @@ A voice-enabled AI assistant that democratizes access to oceanographic data from
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-org/ocean-voice-assistant.git
-   cd ocean-voice-assistant
+   git clone https://github.com/your-org/Ocean-Assistant.git
+   cd Ocean-Assistant
