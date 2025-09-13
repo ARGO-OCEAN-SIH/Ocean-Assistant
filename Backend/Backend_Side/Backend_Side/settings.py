@@ -31,6 +31,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "rest_framework",
+    "channels",
     'oceanassistantbackend',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -68,6 +70,16 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Backend_Side.wsgi.application'
+
+ASGI_APPLICATION = "Backend_Side.asgi.application"
+
+# (Optional) if you want Redis for scaling WS
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",  
+        # use "channels_redis.core.RedisChannelLayer" in prod
+    }
+}
 
 
 # Database

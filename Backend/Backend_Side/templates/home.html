@@ -84,6 +84,136 @@ nav .nav-links li a:hover {
     <section class="hero">
         <h1>Welcome to MySite</h1>
         <p>Explore ocean of possibilities with Django 🚀</p>
+          <!-- Floating Voice Button -->
+  <button id="voiceBtn" class="voice-btn">
+    🎤click
+  </button>
+<script>
+let ws;
+let mediaRecorder;
+let isRecording = false;
+const voiceBtn = document.getElementById("voiceBtn");
+
+voiceBtn.addEventListener("click", () => {
+  if (!isRecording) {
+    startRecording();
+  } else {
+    stopRecording();
+  }
+});
+
+async function startRecording() {
+  ws = new WebSocket("ws://localhost:8000/ws/audio/");
+
+  ws.onopen = () => {
+    console.log("✅ WebSocket connected");
+    ws.send(JSON.stringify({ action: "start_stream", format: "webm" }));
+  };
+
+  ws.onmessage = (event) => {
+    console.log("📩 From server:", event.data);
+    const msg = JSON.parse(event.data);
+    if (msg.status === "transcription") {
+      alert("📝 Transcribed: " + msg.text);
+    }
+  };
+
+  ws.onclose = () => {
+    console.log("❌ WebSocket closed");
+  };
+
+  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  mediaRecorder = new MediaRecorder(stream, { mimeType: "audio/webm; codecs=opus" });
+
+  mediaRecorder.ondataavailable = async (e) => {
+    console.log("🎤 Chunk size:", e.data.size);
+    if (e.data.size > 0 && ws.readyState === WebSocket.OPEN) {
+      const buffer = await e.data.arrayBuffer();
+      ws.send(buffer); // send raw binary audio
+    }
+  };
+
+  mediaRecorder.start(250);
+  isRecording = true;
+  voiceBtn.classList.add("recording");
+  console.log("🎙️ Recording started");
+}
+
+function stopRecording() {
+  if (mediaRecorder) {
+    mediaRecorder.stop();
+  }
+  if (ws && ws.readyState === WebSocket.OPEN) {
+    ws.send(JSON.stringify({ action: "stop_stream" }));
+    // do NOT close immediately — wait for server transcription response
+  }
+  isRecording = false;
+  voiceBtn.classList.remove("recording");
+  console.log("🛑 Recording stopped");
+}
+</script>
+{% comment %} 
+  <script>
+    let ws;
+    let mediaRecorder;
+    let isRecording = false;
+
+    const voiceBtn = document.getElementById("voiceBtn");
+
+    voiceBtn.addEventListener("click", async () => {
+      if (!isRecording) {
+        startRecording();
+      } else {
+        stopRecording();
+      }
+    });
+
+    async function startRecording() {
+      // Connect to WebSocket
+      ws = new WebSocket("ws://localhost:8000/ws/audio/");
+      
+      ws.onopen = () => {
+        console.log("✅ WebSocket connected");
+        ws.send(JSON.stringify({ action: "start_stream" }));
+      };
+
+      ws.onmessage = (event) => {
+        console.log("📩 From server:", event.data);
+      };
+
+      ws.onclose = () => {
+        console.log("❌ WebSocket closed");
+      };
+
+      // Ask for microphone access
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorder = new MediaRecorder(stream);
+
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0 && ws.readyState === WebSocket.OPEN) {
+          ws.send(e.data);  // send raw audio chunks to backend
+        }
+      };
+
+      mediaRecorder.start(250); // send every 250ms
+      isRecording = true;
+      voiceBtn.classList.add("recording");
+      console.log("🎙️ Recording started");
+    }
+
+    function stopRecording() {
+      if (mediaRecorder) {
+        mediaRecorder.stop();
+      }
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({ action: "stop_stream" }));
+        ws.close();
+      }
+      isRecording = false;
+      voiceBtn.classList.remove("recording");
+      console.log("🛑 Recording stopped");
+    }
+  </script> {% endcomment %}
     </section>
 </body>
 </html>
