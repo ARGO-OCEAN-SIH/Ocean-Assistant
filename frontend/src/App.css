@@ -63,6 +63,7 @@ body, .App {
 .sci-fi-header {
 	text-align: center;
 	margin-bottom: 32px;
+	 /* padding-top: 80px; */
 }
 .sci-fi-title {
 	font-size: 2.8rem;
@@ -203,3 +204,28 @@ body, .App {
 	padding: 16px;
 }
 
+.about-cont{
+  background : linear-gradient(90deg, #1CB5E0 0%, #000851 100%);
+  color : white
+}
+/* .navbar{
+  height : 60px;
+  background: linear-gradient(to right, #2c99b7 0%, #4550b6 100%);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+} */
+ul{
+	text-decoration: none;
+	list-style: none;
+	gap : 10px;
+}
+li{
+	text-decoration: none;
+}
+.nav-icon{
+	font-weight: bolder;
+	font-size: larger;
+	font-style: italic;
+}
+.links{
+	font-weight: bolder;
+}
