@@ -111,65 +111,141 @@
     <section class="hero">
       <h1>Welcome to MySite</h1>
       <p>Explore ocean of possibilities with Django 🚀</p>
-      
-      <!-- Floating Voice Button -->
-      <button id="start">Start Recording</button>
-      <button id="stop" disabled>Stop Recording</button>
-      <div id="transcript" style="margin-top: 20px; background: white; color: black; padding: 10px; border-radius: 5px;"></div>
-    </section>
-
-    <script>
-      let mediaRecorder;
-      let audioChunks = [];
-      
-      document.getElementById('start').onclick = async () => {
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          mediaRecorder = new MediaRecorder(stream);
-          audioChunks = [];
-      
-          mediaRecorder.ondataavailable = (event) => {
-            audioChunks.push(event.data);
-          };
-      
-          mediaRecorder.start();
-          document.getElementById('start').disabled = true;
-          document.getElementById('stop').disabled = false;
-        } catch (error) {
-          console.error("Error accessing microphone:", error);
-          alert("Could not access microphone. Please check permissions.");
-        }
-      };
-      
-      document.getElementById('stop').onclick = () => {
-        mediaRecorder.stop();
-        document.getElementById('start').disabled = false;
-        document.getElementById('stop').disabled = true;
-      
-        mediaRecorder.onstop = async () => {
-          const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-          const formData = new FormData();
-          formData.append('file', audioBlob, 'input.webm');
-      
-          try {
-            const response = await fetch('/upload-audio/', {
-              method: 'POST',
-              body: formData
-            });
-            
-            const data = await response.json();
-            if (data.text) {
-              document.getElementById('transcript').innerText = data.text;
-            } else if (data.error) {
-              console.error("Error:", data.error);
-              alert("Error processing audio: " + data.error);
+      <div class="voice-container" style="margin: 20px; padding: 20px; background: white; border-radius: 10px;">
+    <h3>Real-time Voice Input</h3>
+    <button id="start-voice">Start Listening</button>
+    <button id="stop-voice" disabled>Stop Listening</button>
+    <div id="voice-status">Ready to listen...</div>
+    <div id="voice-result" style="margin-top: 20px; min-height: 100px; border: 1px solid #ccc; padding: 10px;"></div>
+</div>
+<script>
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
             }
-          } catch (error) {
-            console.error("Upload error:", error);
-            alert("Error uploading audio");
-          }
-        };
-      };
-    </script>
+        }
+    }
+    return cookieValue;
+}
+
+class FreeVoiceProcessor {
+    constructor() {
+        this.recognition = null;
+        this.isListening = false;
+    }
+
+    startListening() {
+        try {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                alert('Speech recognition not supported in this browser. Use Chrome or Edge.');
+                return;
+            }
+
+            this.recognition = new SpeechRecognition();
+            this.recognition.continuous = true;
+            this.recognition.interimResults = true;
+            this.recognition.lang = 'en-US';
+
+            this.recognition.onresult = (event) => {
+                let finalText = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    if (event.results[i].isFinal) {
+                        finalText += event.results[i][0].transcript;
+                    }
+                }
+                if (finalText) {
+                    this.sendToAI(finalText);
+                }
+            };
+
+            this.recognition.start();
+            this.isListening = true;
+            document.getElementById('start-voice').disabled = true;
+            document.getElementById('stop-voice').disabled = false;
+            document.getElementById('voice-status').textContent = 'Listening...';
+
+        } catch (error) {
+            alert("Error starting voice recognition: " + error.message);
+        }
+    }
+
+    stopListening() {
+        if (this.recognition) {
+            this.recognition.stop();
+        }
+        this.isListening = false;
+        document.getElementById('start-voice').disabled = false;
+        document.getElementById('stop-voice').disabled = true;
+        document.getElementById('voice-status').textContent = 'Stopped';
+    }
+
+    async sendToAI(text) {
+        try {
+            // Show user message
+            document.getElementById('voice-result').innerHTML += `
+                <div style="color: blue; margin: 10px 0; padding: 10px; background: #f0f8ff; border-radius: 5px;">
+                    <strong>You:</strong> ${text}
+                </div>
+            `;
+
+            const response = await fetch('/process-voice/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+                body: JSON.stringify({ text: text })
+            });
+
+            const result = await response.json();
+            
+            // Show AI response
+            if (result.success) {
+                document.getElementById('voice-result').innerHTML += `
+                    <div style="color: green; margin: 10px 0; padding: 10px; background: #f0fff0; border-radius: 5px;">
+                        <strong>AI:</strong> ${result.response}
+                    </div>
+                `;
+            } else {
+                document.getElementById('voice-result').innerHTML += `
+                    <div style="color: red; margin: 10px 0; padding: 10px; background: #fff0f0; border-radius: 5px;">
+                        <strong>Error:</strong> ${result.response}
+                    </div>
+                `;
+            }
+            
+            // Auto-scroll to bottom
+            const resultDiv = document.getElementById('voice-result');
+            resultDiv.scrollTop = resultDiv.scrollHeight;
+
+        } catch (error) {
+            document.getElementById('voice-result').innerHTML += `
+                <div style="color: red;">
+                    <strong>Connection Error:</strong> Please check your internet connection
+                </div>
+            `;
+        }
+    }
+}
+
+// Initialize
+const voiceProcessor = new FreeVoiceProcessor();
+
+document.getElementById('start-voice').addEventListener('click', () => {
+    voiceProcessor.startListening();
+});
+
+document.getElementById('stop-voice').addEventListener('click', () => {
+    voiceProcessor.stopListening();
+});
+</script>
+    </section>
   </body>
 </html>
