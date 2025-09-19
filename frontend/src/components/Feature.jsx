@@ -1,28 +1,33 @@
-import { ArrowPathIcon, CloudArrowUpIcon, FingerPrintIcon, LockClosedIcon } from '@heroicons/react/24/outline'
+import {
+  ArrowPathIcon,
+  CloudArrowUpIcon,
+  FingerPrintIcon,
+  LockClosedIcon,
+} from '@heroicons/react/24/outline'
 
 const features = [
   {
-    name: 'Push to deploy',
+    name: 'AI-Powered Querying',
     description:
-      'Morbi viverra dui mi arcu sed. Tellus semper adipiscing suspendisse semper morbi. Odio urna massa nunc massa.',
+      'Leverages large language models with Retrieval-Augmented Generation (RAG) to interpret natural language queries and fetch ARGO oceanographic data reliably.',
     icon: CloudArrowUpIcon,
   },
   {
-    name: 'SSL certificates',
+    name: 'Secure Data Storage',
     description:
-      'Sit quis amet rutrum tellus ullamcorper ultricies libero dolor eget. Sem sodales gravida quam turpis enim lacus amet.',
+      'Processes ARGO NetCDF data into structured SQL/Parquet formats and stores securely in relational and vector databases like PostgreSQL and FAISS/Chroma.',
     icon: LockClosedIcon,
   },
   {
-    name: 'Simple queues',
+    name: 'Interactive Visualizations',
     description:
-      'Quisque est vel vulputate cursus. Risus proin diam nunc commodo. Lobortis auctor congue commodo diam neque.',
+      'Provides intuitive dashboards with geospatial maps, depth-time plots, and profile comparisons using tools like Plotly and Leaflet for rich insight into ocean data.',
     icon: ArrowPathIcon,
   },
   {
-    name: 'Advanced security',
+    name: 'Advanced Security & Privacy',
     description:
-      'Arcu egestas dolor vel iaculis in ipsum mauris. Tincidunt mattis aliquet hac quis. Id hac maecenas ac donec pharetra eget.',
+      'Implements robust authentication and data privacy measures safeguarding sensitive oceanographic metadata and user interactions.',
     icon: FingerPrintIcon,
   },
 ]
@@ -32,13 +37,12 @@ export default function Feature() {
     <div id="feature-section" className="bg-gray-900 py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl lg:text-center">
-          <h2 className="text-base/7 font-semibold text-indigo-400">Deploy faster</h2>
+          <h2 className="text-base/7 font-semibold text-indigo-400">Deploy smarter</h2>
           <p className="mt-2 text-4xl font-semibold tracking-tight text-pretty text-white sm:text-5xl lg:text-balance">
-            Everything you need to deploy your app
+            AI-powered ARGO Ocean Data Discovery Platform
           </p>
           <p className="mt-6 text-lg/8 text-gray-300">
-            Quis tellus eget adipiscing convallis sit sit eget aliquet quis. Suspendisse eget egestas a elementum
-            pulvinar et feugiat blandit at. In mi viverra elit nunc.
+            Democratizing oceanographic data access through an AI conversational interface, enabling domain experts and policymakers to effortlessly explore, query, and visualize ARGO float data.
           </p>
         </div>
         <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
@@ -46,8 +50,8 @@ export default function Feature() {
             {features.map((feature) => (
               <div key={feature.name} className="relative pl-16">
                 <dt className="text-base/7 font-semibold text-white">
-                  <div className="absolute top-0 left-0 flex size-10 items-center justify-center rounded-lg bg-indigo-500">
-                    <feature.icon aria-hidden="true" className="size-6 text-white" />
+                  <div className="absolute top-0 left-0 flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-500">
+                    <feature.icon aria-hidden="true" className="h-6 w-6 text-white" />
                   </div>
                   {feature.name}
                 </dt>
