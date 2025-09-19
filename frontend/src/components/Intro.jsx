@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from 'react';
 
-const floatingTexts = [
-  { id: 1, text: 'Data', style: { top: '10%', left: '15%', color: '#18b8ff' } },
-  { id: 2, text: 'Oceans', style: { top: '35%', left: '80%', color: '#63e2ff' } },
-  { id: 3, text: 'AI', style: { top: '75%', left: '10%', color: '#1df3ff' } },
-  { id: 4, text: 'Insights', style: { top: '60%', left: '50%', color: '#18b8ff' } },
-  { id: 5, text: 'Explore', style: { top: '20%', left: '65%', color: '#63e2ff' } },
-  { id: 6, text: 'Marine', style: { top: '50%', left: '25%', color: '#1df3ff' } },
-  { id: 7, text: 'Ecosystems', style: { top: '70%', left: '80%', color: '#18b8ff' } },
-  { id: 8, text: 'Sustainability', style: { top: '85%', left: '35%', color: '#63e2ff' } },
-  { id: 9, text: 'Protection', style: { top: '30%', left: '45%', color: '#1df3ff' } },
+const floatingTextsLeft = [
+  { id: 1, text: 'Data', style: { top: '10%', left: '10%', color: '#18b8ff' } },
+  { id: 3, text: 'AI', style: { top: '30%', left: '5%', color: '#1df3ff' } },
+  { id: 6, text: 'Marine', style: { top: '50%', left: '12%', color: '#1df3ff' } },
+  { id: 9, text: 'Protection', style: { top: '70%', left: '10%', color: '#1df3ff' } },
 ];
 
-const floatingGraphics = [
+const floatingTextsRight = [
+  { id: 2, text: 'Oceans', style: { top: '15%', right: '12%', color: '#63e2ff' } },
+  { id: 4, text: 'Insights', style: { top: '40%', right: '15%', color: '#18b8ff' } },
+  { id: 5, text: 'Explore', style: { top: '60%', right: '10%', color: '#63e2ff' } },
+  { id: 7, text: 'Ecosystems', style: { top: '80%', right: '12%', color: '#18b8ff' } },
+  { id: 8, text: 'Sustainability', style: { top: '90%', right: '15%', color: '#63e2ff' } },
+];
+
+const floatingGraphicsLeft = [
   {
     id: 1,
     svg: (
@@ -30,25 +33,7 @@ const floatingGraphics = [
         <circle cx="32" cy="32" r="8" />
       </svg>
     ),
-    baseStyle: { top: '10%', left: '10%' },
-  },
-  {
-    id: 2,
-    svg: (
-      <svg
-        viewBox="0 0 64 64"
-        fill="none"
-        stroke="#63e2ff"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="w-12 h-12"
-      >
-        {/* Starfish shape */}
-        <path d="M32 4 L36 24 L56 24 L38 34 L44 54 L32 42 L20 54 L26 34 L8 24 L28 24 Z" />
-      </svg>
-    ),
-    baseStyle: { top: '20%', left: '85%' },
+    baseStyle: { top: '20%', left: '5%' },
   },
   {
     id: 3,
@@ -62,13 +47,32 @@ const floatingGraphics = [
         strokeLinejoin="round"
         className="w-8 h-8"
       >
-        {/* Fish shape */}
         <path d="M2 32 L22 22 L42 32 L22 42 Z" />
         <circle cx="52" cy="32" r="10" />
         <circle cx="52" cy="32" r="5" />
       </svg>
     ),
-    baseStyle: { top: '75%', left: '15%' },
+    baseStyle: { top: '65%', left: '8%' },
+  },
+];
+
+const floatingGraphicsRight = [
+  {
+    id: 2,
+    svg: (
+      <svg
+        viewBox="0 0 64 64"
+        fill="none"
+        stroke="#63e2ff"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="w-12 h-12"
+      >
+        <path d="M32 4 L36 24 L56 24 L38 34 L44 54 L32 42 L20 54 L26 34 L8 24 L28 24 Z" />
+      </svg>
+    ),
+    baseStyle: { top: '30%', right: '8%' },
   },
   {
     id: 4,
@@ -82,11 +86,10 @@ const floatingGraphics = [
         strokeLinejoin="round"
         className="w-9 h-9"
       >
-        {/* Wave shape */}
         <path d="M2 40c8-12 16 12 24 0s16-12 24 0 16 12 24 0" />
       </svg>
     ),
-    baseStyle: { top: '40%', left: '70%' },
+    baseStyle: { top: '50%', right: '12%' },
   },
   {
     id: 5,
@@ -100,24 +103,23 @@ const floatingGraphics = [
         strokeLinejoin="round"
         className="w-14 h-14"
       >
-        {/* Coral-like shape */}
         <path d="M32 4v56 M32 4c10 10 20 20 10 40M32 4c-10 10-20 20-10 40M42 30l10 10M22 30l-10 10" />
       </svg>
     ),
-    baseStyle: { top: '60%', left: '60%' },
+    baseStyle: { top: '70%', right: '10%' },
   },
 ];
 
-
 const zigzagTransform = (offset, id) => {
-  const xMove = Math.sin((offset + id * 50) / 15) * 25;
-  const yMove = Math.cos((offset + id * 30) / 10) * 15;
+  const xMove = Math.sin((offset + id * 50) / 15) * 20;
+  const yMove = Math.cos((offset + id * 30) / 10) * 12;
   const rotate = (offset + id * 40) / 15;
   return `translate(${xMove}px, ${yMove}px) rotate(${rotate}deg)`;
 };
 
 const Intro = () => {
   const [offset, setOffset] = useState(0);
+
   useEffect(() => {
     let direction = 1;
     const interval = setInterval(() => {
@@ -132,8 +134,8 @@ const Intro = () => {
 
   return (
     <div className="relative isolate min-h-screen px-6 pt-14 lg:px-8 overflow-x-hidden text-[#c8f2ff] font-sans bg-gradient-animated overflow-visible select-none">
-      {/* Floating texts */}
-      {floatingTexts.map(({ id, text, style }) => (
+      {/* Floating texts left side */}
+      {floatingTextsLeft.map(({ id, text, style }) => (
         <span
           key={id}
           className="absolute font-extrabold pointer-events-none text-glow text-3xl transform-origin-center animate-rotate-slow"
@@ -147,8 +149,23 @@ const Intro = () => {
         </span>
       ))}
 
-      {/* Floating ocean creatures and symbols with zigzag motion */}
-      {floatingGraphics.map(({ id, svg, baseStyle }) => (
+      {/* Floating texts right side */}
+      {floatingTextsRight.map(({ id, text, style }) => (
+        <span
+          key={id}
+          className="absolute font-extrabold pointer-events-none text-glow text-3xl transform-origin-center animate-rotate-slow"
+          style={{
+            ...style,
+            transform: `translateY(${Math.sin((offset + id * 20) / 12) * 8}px) rotate(${(offset + id * 40) / 12}deg)`,
+            userSelect: 'none',
+          }}
+        >
+          {text}
+        </span>
+      ))}
+
+      {/* Floating graphics left side */}
+      {floatingGraphicsLeft.map(({ id, svg, baseStyle }) => (
         <div
           key={id}
           className="absolute pointer-events-none"
@@ -157,7 +174,25 @@ const Intro = () => {
             left: baseStyle.left,
             transform: zigzagTransform(offset, id),
             userSelect: 'none',
-            filter: id % 2 === 0 ? 'drop-shadow(0 0 6px #63e2ffcc)' : 'drop-shadow(0 0 6px #18b8ffcc)',
+            filter: 'drop-shadow(0 0 6px #18b8ffcc)',
+            transition: 'transform 0.1s ease-out',
+          }}
+        >
+          {svg}
+        </div>
+      ))}
+
+      {/* Floating graphics right side */}
+      {floatingGraphicsRight.map(({ id, svg, baseStyle }) => (
+        <div
+          key={id}
+          className="absolute pointer-events-none"
+          style={{
+            top: baseStyle.top,
+            right: baseStyle.right,
+            transform: zigzagTransform(offset, id),
+            userSelect: 'none',
+            filter: 'drop-shadow(0 0 6px #63e2ffcc)',
             transition: 'transform 0.1s ease-out',
           }}
         >
@@ -201,27 +236,23 @@ const Intro = () => {
             Query Global Ocean Data
           </a>
         </div>
-
         {/* Partners Section */}
         <section className="mt-24">
           <h2 className="text-5xl font-semibold text-[#63e2ff] mb-16 fade-in delay-600 drop-shadow-glow">
             Partners
           </h2>
           <div className="flex justify-center flex-wrap gap-20 text-[#c8f2ff] text-opacity-90 font-semibold tracking-wide select-none">
-            {['OceanDataLab', 'NOAA', 'World Ocean Database', 'Marine Analytics Co.'].map(
-              (partner, i) => (
-                <a
-                  key={i}
-                  href={`#partner${i + 1}`}
-                  className="partner-link relative inline-block text-2xl hover:text-[#18b8ff] transition-colors duration-300 underline-effect"
-                >
-                  {partner}
-                </a>
-              )
-            )}
+            {['OceanDataLab', 'NOAA', 'World Ocean Database', 'Marine Analytics Co.'].map((partner, i) => (
+              <a
+                key={i}
+                href={`#partner${i + 1}`}
+                className="partner-link relative inline-block text-2xl hover:text-[#18b8ff] transition-colors duration-300 underline-effect"
+              >
+                {partner}
+              </a>
+            ))}
           </div>
         </section>
-
         {/* Navigation Links */}
         <nav className="quick-links mt-20 flex justify-center gap-16 text-[#18b8ff] font-bold">
           {['about', 'data', 'dashboard'].map((navItem) => (
