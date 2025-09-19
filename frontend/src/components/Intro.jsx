@@ -1,66 +1,102 @@
 import React from 'react';
-import { Dialog, DialogPanel } from '@headlessui/react'
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
+
 const Intro = () => {
-    return (
-         <div className="relative isolate px-6 pt-14 lg:px-8">
+  return (
+    <div className="relative isolate min-h-screen px-6 pt-14 lg:px-8 bg-gradient-to-br from-[#06132b] to-[#134880] overflow-x-hidden text-[#c8f2ff] font-sans">
+      {/* Glowing globe visual */}
+      <div
+        aria-hidden="true"
+        className="mx-auto mt-20 w-[270px] h-[270px] rounded-full bg-gradient-radial from-[#1df3ff] to-[#06132b] shadow-[0_0_32px_#0aeefd44, inset_0_0_140px_#082d3e88] relative animate-glowPulse"
+        style={{ boxShadow: '0 0 32px #0aeefd44, 0 0 140px #082d3e88 inset' }}
+      >
+        {/* Outer ring */}
         <div
-          aria-hidden="true"
-          className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
-        >
-          <div
-            style={{
-              clipPath:
-                'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
-            }}
-            className="relative left-[calc(50%-11rem)] aspect-1155/678 w-144.5 -translate-x-1/2 rotate-30 bg-linear-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-288.75"
-          />
-        </div>
-        <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
-          <div className="hidden sm:mb-8 sm:flex sm:justify-center">
-            <div className="relative rounded-full px-3 py-1 text-sm/6 text-gray-400 ring-1 ring-white/10 hover:ring-white/20">
-              Announcing our next round of funding.{' '}
-              <a href="#" className="font-semibold text-indigo-400">
-                <span aria-hidden="true" className="absolute inset-0" />
-                Read more <span aria-hidden="true">&rarr;</span>
-              </a>
-            </div>
-          </div>
-          <div className="text-center">
-            <h1 className="text-5xl font-semibold tracking-tight text-balance text-white sm:text-7xl">
-              Data to enrich your online business
-            </h1>
-            <p className="mt-8 text-lg font-medium text-pretty text-gray-400 sm:text-xl/8">
-              Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet
-              fugiat veniam occaecat.
-            </p>
-            <div className="mt-10 flex items-center justify-center gap-x-6">
-              <a
-                href="#"
-                className="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-              >
-                Get started
-              </a>
-              <a href="#" className="text-sm/6 font-semibold text-white">
-                Learn more <span aria-hidden="true">→</span>
-              </a>
-            </div>
-          </div>
-        </div>
-        <div
-          aria-hidden="true"
-          className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
-        >
-          <div
-            style={{
-              clipPath:
-                'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
-            }}
-            className="relative left-[calc(50%+3rem)] aspect-1155/678 w-144.5 -translate-x-1/2 bg-linear-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%+36rem)] sm:w-288.75"
-          />
-        </div>
+          className="absolute top-[23px] left-[23px] w-[225px] h-[225px] rounded-full border-2 border-[#5edff8] shadow-[0_0_32px_#27ecfc44]"
+          style={{ opacity: 0.35 }}
+        />
       </div>
-    );
+
+      <div className="mx-auto max-w-2xl text-center py-16 sm:py-24 lg:py-32">
+        <h1 className="hero-title text-5xl sm:text-6xl font-extrabold tracking-wide text-[#63e2ff] drop-shadow-[0_2px_24px_#022e45]">
+          Unlock the Secrets of Our Oceans
+        </h1>
+        <p className="hero-tagline mt-4 text-lg sm:text-xl max-w-xl mx-auto text-[#c8f2ff] text-opacity-90 font-medium leading-relaxed">
+          Harnessing advanced data analytics to understand,<br />
+          protect, and explore Earth’s vital marine ecosystems.
+        </p>
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
+          <a
+            href="#dashboard"
+            className="cta-btn rounded-md bg-[#18b8ff] text-[#06132b] font-bold px-7 py-3 text-sm shadow-[0_4px_24px_#067fd19a] hover:bg-[#63e2ff] hover:text-[#134880] transition-colors focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-[#18b8ff]"
+          >
+            Explore Data
+          </a>
+          <a
+            href="#chat"
+            className="cta-btn rounded-md bg-[#18b8ff] text-[#06132b] font-bold px-7 py-3 text-sm shadow-[0_4px_24px_#067fd19a] hover:bg-[#63e2ff] hover:text-[#134880] transition-colors focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-[#18b8ff]"
+          >
+            Query Global Ocean Data
+          </a>
+        </div>
+
+        {/* Partners Section */}
+        <section className="mt-16">
+          <h2 className="text-3xl font-semibold text-[#63e2ff] mb-6">Partners</h2>
+          <div className="flex justify-center flex-wrap gap-10 text-[#c8f2ff] text-opacity-80 font-medium">
+            <a href="#partner1" className="hover:text-[#18b8ff] transition-colors">OceanDataLab</a>
+            <a href="#partner2" className="hover:text-[#18b8ff] transition-colors">NOAA</a>
+            <a href="#partner3" className="hover:text-[#18b8ff] transition-colors">World Ocean Database</a>
+            <a href="#partner4" className="hover:text-[#18b8ff] transition-colors">Marine Analytics Co.</a>
+          </div>
+        </section>
+
+        <nav className="quick-links mt-12 flex justify-center gap-10 text-[#18b8ff]">
+          <a href="#about" className="hover:bg-[#63e2ff] hover:text-[#06132b] px-4 py-2 rounded-md transition-colors">
+            About
+          </a>
+          <a href="#data" className="hover:bg-[#63e2ff] hover:text-[#06132b] px-4 py-2 rounded-md transition-colors">
+            Data
+          </a>
+          <a href="#dashboard" className="hover:bg-[#63e2ff] hover:text-[#06132b] px-4 py-2 rounded-md transition-colors">
+            Dashboard
+          </a>
+        </nav>
+      </div>
+
+      <style jsx>{`
+        @keyframes glowPulse {
+          0% {
+            box-shadow: 0 0 32px #1bbddc, 0 0 140px #082d3e88 inset;
+          }
+          100% {
+            box-shadow: 0 0 70px #28eff9, 0 0 170px #021d3e42 inset;
+          }
+        }
+        .animate-glowPulse {
+          animation: glowPulse 3.2s infinite alternate;
+        }
+        .bg-gradient-radial {
+          background-image: radial-gradient(circle closest-side, #1df3ff 40%, #06132b 100%);
+        }
+        .cta-btn {
+          display: inline-block;
+          border-radius: 0.6rem;
+          transition: background 0.2s, color 0.2s;
+          text-decoration: none;
+          cursor: pointer;
+          user-select: none;
+        }
+        .hero-title {
+          line-height: 1.1;
+        }
+        .hero-tagline br {
+          content: "";
+          margin-bottom: 0.5rem;
+          display: block;
+        }
+      `}</style>
+    </div>
+  );
 };
 
 export default Intro;
