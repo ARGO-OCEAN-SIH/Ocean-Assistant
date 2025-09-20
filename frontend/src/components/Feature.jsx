@@ -34,33 +34,99 @@ const features = [
 
 export default function Feature() {
   return (
-    <div id="feature-section" className="bg-gray-900 py-24 sm:py-32">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="mx-auto max-w-2xl lg:text-center">
-          <h2 className="text-base/7 font-semibold text-indigo-400">Deploy smarter</h2>
-          <p className="mt-2 text-4xl font-semibold tracking-tight text-pretty text-white sm:text-5xl lg:text-balance">
-            AI-powered ARGO Ocean Data Discovery Platform
+    <section
+      id="feature-section"
+      className="relative bg-gradient-to-b from-[#001021] to-[#00040f] py-24 sm:py-32 overflow-hidden"
+    >
+      {/* Animated background blobs */}
+      <div
+        aria-hidden="true"
+        className="absolute -top-20 -left-36 h-[480px] w-[480px] rounded-full bg-indigo-700 opacity-20 blur-[150px] animate-blob animation-delay-2000 mix-blend-multiply"
+      />
+      <div
+        aria-hidden="true"
+        className="absolute top-36 right-20 h-[320px] w-[320px] rounded-full bg-cyan-500 opacity-30 blur-[120px] animate-blob mix-blend-multiply"
+      />
+      <div
+        aria-hidden="true"
+        className="absolute -bottom-40 left-20 h-[600px] w-[600px] rounded-full bg-blue-500 opacity-20 blur-[180px] animate-blob animation-delay-4000 mix-blend-multiply"
+      />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="mx-auto max-w-2xl text-center">
+          <h2 className="text-base font-semibold tracking-wide text-cyan-400 uppercase animate-pulse">
+            Ocean Assistant
+          </h2>
+          <p className="mt-2 text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
+            AI-powered ARGO Ocean Discovery Platform
           </p>
-          <p className="mt-6 text-lg/8 text-gray-300">
+          <p className="mt-6 text-lg text-gray-300 max-w-xl mx-auto">
             Democratizing oceanographic data access through an AI conversational interface, enabling domain experts and policymakers to effortlessly explore, query, and visualize ARGO float data.
           </p>
         </div>
-        <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
-          <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
-            {features.map((feature) => (
-              <div key={feature.name} className="relative pl-16">
-                <dt className="text-base/7 font-semibold text-white">
-                  <div className="absolute top-0 left-0 flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-500">
-                    <feature.icon aria-hidden="true" className="h-6 w-6 text-white" />
-                  </div>
-                  {feature.name}
-                </dt>
-                <dd className="mt-2 text-base/7 text-gray-400">{feature.description}</dd>
-              </div>
-            ))}
-          </dl>
+
+        <div className="mt-16 max-w-4xl mx-auto grid grid-cols-1 gap-y-10 gap-x-12 sm:grid-cols-2">
+          {features.map((feature) => (
+            <div
+              key={feature.name}
+              className="group relative rounded-3xl bg-gray-900 bg-opacity-30 p-8 shadow-lg ring-1 ring-cyan-600 hover:ring-cyan-400 hover:translate-y-[-8px] transition-transform flex flex-col"
+            >
+              <dt>
+                <div className="absolute -inset-1 flex items-center justify-center rounded-3xl bg-gradient-to-br from-cyan-500 to-indigo-600 opacity-25 blur-md transition-opacity group-hover:opacity-100"></div>
+                <feature.icon className="relative h-12 w-12 text-cyan-400 group-hover:text-indigo-400" aria-hidden="true" />
+                <p className="relative mt-6 text-xl font-semibold text-white">{feature.name}</p>
+              </dt>
+              <dd className="relative mt-4 flex-grow text-gray-300">{feature.description}</dd>
+            </div>
+          ))}
         </div>
       </div>
-    </div>
+
+      {/* Extra vibes and sparkle */}
+      <div className="absolute inset-0 pointer-events-none">
+        {[...Array(20)].map((_, i) => (
+          <span
+            key={i}
+            className="absolute bg-cyan-400 rounded-full opacity-40 animate-fadeInOut"
+            style={{
+              width: `${Math.random() * 6 + 2}px`,
+              height: `${Math.random() * 6 + 2}px`,
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              animationDuration: `${Math.random() * 4 + 4}s`,
+              animationDelay: `${Math.random() * 4}s`,
+            }}
+          />
+        ))}
+      </div>
+
+      <style jsx>{`
+        @keyframes blob {
+          0%, 100% {
+            transform: translate(0, 0) scale(1);
+          }
+          33% {
+            transform: translate(30px, -50px) scale(1.05);
+          }
+          66% {
+            transform: translate(-20px, 20px) scale(0.95);
+          }
+        }
+        .animate-blob {
+          animation: blob 8s infinite ease-in-out;
+        }
+        @keyframes fadeInOut {
+          0%, 100% {
+            opacity: 0.4;
+          }
+          50% {
+            opacity: 1;
+          }
+        }
+        .animate-fadeInOut {
+          animation: fadeInOut 6s infinite ease-in-out;
+        }
+      `}</style>
+    </section>
   )
 }
