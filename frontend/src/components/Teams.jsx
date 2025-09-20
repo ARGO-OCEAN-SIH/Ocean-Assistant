@@ -1,73 +1,96 @@
+import React, { useState } from "react";
+
 const people = [
-  {
-    name: 'Leslie Alexander',
-    role: 'Co-Founder / CEO',
-    imageUrl:
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-  },
-  {
-    name: 'Michael Foster',
-    role: 'Co-Founder / CTO',
-    imageUrl:
-      'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-  },
-  {
-    name: 'Dries Vincent',
-    role: 'Business Relations',
-    imageUrl:
-      'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-  },
-  {
-    name: 'Lindsay Walton',
-    role: 'Front-end Developer',
-    imageUrl:
-      'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-  },
-  {
-    name: 'Courtney Henry',
-    role: 'Designer',
-    imageUrl:
-      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-  },
-  {
-    name: 'Tom Cook',
-    role: 'Director of Product',
-    imageUrl:
-      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-  },
-]
+  { name: "Dhruv Chaudhary", role: "Team Leader", imgSrc: "https://randomuser.me/api/portraits/men/45.jpg", contact: "+91 75056 25946" },
+  { name: "Bhumika Jain", role: "Team Member", imgSrc: "https://randomuser.me/api/portraits/women/65.jpg", contact: "+91 82733 82060" },
+  { name: "Diksha Sisodia", role: "Team Member", imgSrc: "https://randomuser.me/api/portraits/women/67.jpg", contact: "+91 82183 16073" },
+  { name: "Chitransh Gaur", role: "Team Member", imgSrc: "https://randomuser.me/api/portraits/men/52.jpg", contact: "+91 90272 57545" },
+  { name: "Akash Yadav", role: "Team Member", imgSrc: "https://randomuser.me/api/portraits/men/57.jpg", contact: "+91 73072 90235" },
+  { name: "Ashutosh Kumar", role: "Team Member", imgSrc: "https://randomuser.me/api/portraits/men/50.jpg", contact: "+91 90609 48710" },
+];
 
 export default function Teams() {
+  const [visibleContact, setVisibleContact] = useState(null);
+
+  const toggleContact = (name) => {
+    if (visibleContact === name) setVisibleContact(null);
+    else setVisibleContact(name);
+  };
+
   return (
-    <div id="teams-section" className=" bg-gray-900 py-24 sm:py-32">
-      <div className="mx-auto grid max-w-7xl gap-20 px-6 lg:px-8 xl:grid-cols-3">
-        <div className="max-w-xl">
-          <h2 className="text-3xl font-semibold tracking-tight text-pretty text-white sm:text-4xl">
-            Meet our leadership
+    <div
+      id="teams-section"
+      className="bg-gray-900 py-24 sm:py-32 px-6 sm:px-12 lg:px-24 text-[#ccefff] font-sans select-none"
+    >
+      <div className="mx-auto max-w-7xl">
+        <div className="max-w-xl mx-auto text-center">
+          <h2 className="text-4xl font-extrabold tracking-tight text-cyan-400 drop-shadow-lg sm:text-5xl mb-6">
+            Meet Our Stellar Team
           </h2>
-          <p className="mt-6 text-lg/8 text-gray-400">
-            We’re a dynamic group of individuals who are passionate about what we do and dedicated to delivering the
-            best results for our clients.
+          <p className="text-cyan-200">
+            Passionate minds united to revolutionize ocean data understanding with AI-powered innovations.
           </p>
         </div>
-        <ul role="list" className="grid gap-x-8 gap-y-12 sm:grid-cols-2 sm:gap-y-16 xl:col-span-2">
-          {people.map((person) => (
-            <li key={person.name}>
-              <div className="flex items-center gap-x-6">
-                <img
-                  alt=""
-                  src={person.imageUrl}
-                  className="size-16 rounded-full outline-1 -outline-offset-1 outline-white/10"
-                />
-                <div>
-                  <h3 className="text-base/7 font-semibold tracking-tight text-white">{person.name}</h3>
-                  <p className="text-sm/6 font-semibold text-indigo-400">{person.role}</p>
+        <ul
+          role="list"
+          className="grid gap-12 mt-16 grid-cols-1 sm:grid-cols-2 md:grid-cols-3"
+        >
+          {people.map(({ name, role, imgSrc, contact }) => (
+            <li
+              key={name}
+              className="group relative flex flex-col items-center bg-[#072640] rounded-2xl p-6 shadow-lg shadow-cyan-600 transition-transform transform hover:scale-105 cursor-pointer"
+              tabIndex={0}
+              aria-label={`Team member ${name}, role: ${role}`}
+            >
+              <div className="relative">
+                <div className="w-36 h-36 rounded-full overflow-hidden ring-4 ring-cyan-500 shadow-cyan-600 shadow-lg">
+                  <img
+                    src={imgSrc}
+                    alt={`Portrait of ${name}`}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                    draggable={false}
+                  />
                 </div>
+                {role === "Team Leader" && (
+                  <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-gradient-to-tr from-purple-600 to-cyan-400 text-black px-3 py-1 rounded-full shadow-lg shadow-cyan-800 whitespace-nowrap flex items-center gap-1 select-none">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                    Leader
+                  </div>
+                )}
               </div>
+              <h3 className="mt-8 text-xl font-semibold text-white tracking-wide">{name}</h3>
+              <p className="mt-1 text-cyan-400">{role}</p>
+              <button
+                type="button"
+                onClick={() => toggleContact(name)}
+                className="mt-6 px-6 py-2 rounded-full border border-cyan-500 text-cyan-500 hover:bg-cyan-500 hover:text-[#072640] transition-colors font-semibold text-sm"
+                aria-label={`Contact ${name}`}
+              >
+                {visibleContact === name ? contact : "Contact"}
+              </button>
             </li>
           ))}
         </ul>
+        <section className="max-w-3xl mx-auto text-center mt-20 border-t border-cyan-600 pt-6">
+          <h3 className="text-xl font-semibold text-cyan-400 drop-shadow-lg">Team: NovaMinds</h3>
+          <p className="text-cyan-300">SIH Problem Statement ID: SIH25040</p>
+        </section>
       </div>
+      <style jsx>{`
+        .drop-shadow-lg {
+          filter: drop-shadow(0 0 20px #22d3ee);
+        }
+      `}</style>
     </div>
-  )
+  );
 }
