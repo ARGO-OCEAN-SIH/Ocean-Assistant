@@ -1,9 +1,11 @@
-import { useEffect, useRef } from 'react';
-import { Renderer, Program, Mesh, Triangle, Vec3 } from 'ogl';
+'use client'
 
-export default function Orb({ hue = 0, hoverIntensity = 0.2, rotateOnHover = true, forceHoverState = false }) {
-  const ctnDom = useRef(null);
+import React, { useEffect, useRef } from "react";
+import { Renderer, Program, Mesh, Triangle, Vec3 } from "ogl";
 
+export default function Orb({ hue = 220, hoverIntensity = 0.3, rotateOnHover = true, forceHoverState = false }) {
+  const ctnDom = React.useRef(null);
+  
   const vert = /* glsl */ `
     precision highp float;
     attribute vec2 position;
@@ -14,32 +16,34 @@ export default function Orb({ hue = 0, hoverIntensity = 0.2, rotateOnHover = tru
       gl_Position = vec4(position, 0.0, 1.0);
     }
   `;
-
+  
   const frag = /* glsl */ `
     precision highp float;
-
+    varying vec2 vUv;
     uniform float iTime;
     uniform vec3 iResolution;
     uniform float hue;
     uniform float hover;
     uniform float rot;
     uniform float hoverIntensity;
-    varying vec2 vUv;
 
+    // Convert RGB to YIQ for hue rotation
     vec3 rgb2yiq(vec3 c) {
       float y = dot(c, vec3(0.299, 0.587, 0.114));
       float i = dot(c, vec3(0.596, -0.274, -0.322));
       float q = dot(c, vec3(0.211, -0.523, 0.312));
       return vec3(y, i, q);
     }
-    
+
+    // Convert YIQ to RGB
     vec3 yiq2rgb(vec3 c) {
       float r = c.x + 0.956 * c.y + 0.621 * c.z;
       float g = c.x - 0.272 * c.y - 0.647 * c.z;
       float b = c.x - 1.106 * c.y + 1.703 * c.z;
       return vec3(r, g, b);
     }
-    
+
+    // Adjust hue of a color by hueDeg degrees
     vec3 adjustHue(vec3 color, float hueDeg) {
       float hueRad = hueDeg * 3.14159265 / 180.0;
       vec3 yiq = rgb2yiq(color);
@@ -52,40 +56,73 @@ export default function Orb({ hue = 0, hoverIntensity = 0.2, rotateOnHover = tru
       return yiq2rgb(yiq);
     }
 
-    vec3 hash33(vec3 p3) {
-      p3 = fract(p3 * vec3(0.1031, 0.11369, 0.13787));
-      p3 += dot(p3, p3.yxz + 19.19);
-      return -1.0 + 2.0 * fract(vec3(
-        p3.x + p3.y,
-        p3.x + p3.z,
-        p3.y + p3.z
-      ) * p3.zyx);
+    // 3D Perlin noise - classic simplex noise replacement
+    float snoise(vec3 v) {
+      const vec2  C = vec2(1.0/6.0, 1.0/3.0);
+      const vec4  D = vec4(0.0, 0.5, 1.0, 2.0);
+      // First corner
+      vec3 i  = floor(v + dot(v, C.yyy) );
+      vec3 x0 =   v - i + dot(i, C.xxx);
+
+      // Other corners
+      vec3 g = step(x0.yzx, x0.xyz);
+      vec3 l = 1.0 - g;
+      vec3 i1 = min( g.xyz, l.zxy );
+      vec3 i2 = max( g.xyz, l.zxy );
+
+      // x0, x1, x2, x3 offset
+      vec3 x1 = x0 - i1 + C.xxx;
+      vec3 x2 = x0 - i2 + C.yyy;
+      vec3 x3 = x0 - D.yyy;
+
+      // Hash
+      i = mod(i, 289.0);
+      vec4 p = permute( permute( permute(
+          i.z + vec4(0.0, i1.z, i2.z, 1.0 ))
+        + i.y + vec4(0.0, i1.y, i2.y, 1.0 ))
+        + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
+
+      // Normalized gradients
+      float n_ = 1.0/7.0; // N=7
+      vec3  ns = n_ * D.wyz - D.xzx;
+
+      vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+
+      vec4 x_ = floor(j * ns.z);
+      vec4 y_ = floor(j - 7.0 * x_ );
+
+      vec4 x = x_ *ns.x + ns.y;
+      vec4 y = y_ *ns.x + ns.y;
+      vec4 h = 1.0 - abs(x) - abs(y);
+
+      vec4 b0 = vec4( x.xy, y.xy );
+      vec4 b1 = vec4( x.zw, y.zw );
+
+      vec4 s0 = floor(b0)*2.0 + 1.0;
+      vec4 s1 = floor(b1)*2.0 + 1.0;
+      vec4 sh = -step(h, vec4(0.0));
+
+      vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy ;
+      vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww ;
+
+      vec3 p0 = vec3(a0.xy,h.x);
+      vec3 p1 = vec3(a0.zw,h.y);
+      vec3 p2 = vec3(a1.xy,h.z);
+      vec3 p3 = vec3(a1.zw,h.w);
+
+      // Gradients
+      vec4 norm = inversesqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2,p2), dot(p3,p3)));
+      p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;
+
+      // Mix contributions
+      vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+      m = m * m;
+      return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3) ) );
     }
 
-    float snoise3(vec3 p) {
-      const float K1 = 0.333333333;
-      const float K2 = 0.166666667;
-      vec3 i = floor(p + (p.x + p.y + p.z) * K1);
-      vec3 d0 = p - (i - (i.x + i.y + i.z) * K2);
-      vec3 e = step(vec3(0.0), d0 - d0.yzx);
-      vec3 i1 = e * (1.0 - e.zxy);
-      vec3 i2 = 1.0 - e.zxy * (1.0 - e);
-      vec3 d1 = d0 - (i1 - K2);
-      vec3 d2 = d0 - (i2 - K1);
-      vec3 d3 = d0 - 0.5;
-      vec4 h = max(0.6 - vec4(
-        dot(d0, d0),
-        dot(d1, d1),
-        dot(d2, d2),
-        dot(d3, d3)
-      ), 0.0);
-      vec4 n = h * h * h * h * vec4(
-        dot(d0, hash33(i)),
-        dot(d1, hash33(i + i1)),
-        dot(d2, hash33(i + i2)),
-        dot(d3, hash33(i + 1.0))
-      );
-      return dot(vec4(31.316), n);
+    // Permutation function
+    vec4 permute(vec4 x) {
+      return mod(((x*34.0)+1.0)*x, 289.0);
     }
 
     vec4 extractAlpha(vec3 colorIn) {
@@ -93,83 +130,72 @@ export default function Orb({ hue = 0, hoverIntensity = 0.2, rotateOnHover = tru
       return vec4(colorIn.rgb / (a + 1e-5), a);
     }
 
-    const vec3 baseColor1 = vec3(0.611765, 0.262745, 0.996078);
-    const vec3 baseColor2 = vec3(0.298039, 0.760784, 0.913725);
-    const vec3 baseColor3 = vec3(0.062745, 0.078431, 0.600000);
-    const float innerRadius = 0.6;
-    const float noiseScale = 0.65;
+    const vec3 baseColor1 = vec3(0.611, 0.262, 0.996);
+    const vec3 baseColor2 = vec3(0.298, 0.760, 0.913);
+    const vec3 baseColor3 = vec3(0.062, 0.078, 0.600);
 
-    float light1(float intensity, float attenuation, float dist) {
+    float innerRadius = 0.6;
+    float noiseScale = 0.65;
+
+    float lightFunc1(float intensity, float attenuation, float dist) {
       return intensity / (1.0 + dist * attenuation);
     }
-    float light2(float intensity, float attenuation, float dist) {
+
+    float lightFunc2(float intensity, float attenuation, float dist) {
       return intensity / (1.0 + dist * dist * attenuation);
     }
 
-    vec4 draw(vec2 uv) {
-      vec3 color1 = adjustHue(baseColor1, hue);
-      vec3 color2 = adjustHue(baseColor2, hue);
-      vec3 color3 = adjustHue(baseColor3, hue);
-      
+    vec4 draw(vec2 uv, float time, float hover, float rot, float hue, float hoverIntensity) {
+      vec3 col1 = adjustHue(baseColor1, hue);
+      vec3 col2 = adjustHue(baseColor2, hue);
+      vec3 col3 = adjustHue(baseColor3, hue);
+
       float ang = atan(uv.y, uv.x);
       float len = length(uv);
       float invLen = len > 0.0 ? 1.0 / len : 0.0;
-      
-      float n0 = snoise3(vec3(uv * noiseScale, iTime * 0.5)) * 0.5 + 0.5;
-      float r0 = mix(mix(innerRadius, 1.0, 0.4), mix(innerRadius, 1.0, 0.6), n0);
+
+      float n0 = snoise(vec3(uv * noiseScale, time * 0.5)) * 0.5 + 0.5;
+      float r0 = mix(innerRadius * 0.95, 1.0, n0);
       float d0 = distance(uv, (r0 * invLen) * uv);
-      float v0 = light1(1.0, 10.0, d0);
-      v0 *= smoothstep(r0 * 1.05, r0, len);
-      float cl = cos(ang + iTime * 2.0) * 0.5 + 0.5;
-      
-      float a = iTime * -1.0;
+      float v0 = lightFunc1(1.0, 10.0, d0);
+      v0 *= smoothstep(r0 * 1.1, r0, len);
+      float cl = mix(0.4, 1.0, sin(ang + time * 2.0) * 0.5 + 0.5);
+
+      float a = time * -0.5;
       vec2 pos = vec2(cos(a), sin(a)) * r0;
       float d = distance(uv, pos);
-      float v1 = light2(1.5, 5.0, d);
-      v1 *= light1(1.0, 50.0, d0);
-      
-      float v2 = smoothstep(1.0, mix(innerRadius, 1.0, n0 * 0.5), len);
-      float v3 = smoothstep(innerRadius, mix(innerRadius, 1.0, 0.5), len);
-      
-      vec3 col = mix(color1, color2, cl);
-      col = mix(color3, col, v0);
-      col = (col + v1) * v2 * v3;
+      float v1 = lightFunc2(1.5, 5.0, d);
+      v1 *= lightFunc1(hover * hoverIntensity, 25.0, d0);
+
+      float v2 = smoothstep(1.0, innerRadius + 0.3, len);
+      float v3 = smoothstep(innerRadius, innerRadius + 0.4, len);
+
+      vec3 col = mix(col1, col2, cl);
+      col = (col * v0) + (col3 * v1); 
+      col *= v2 * v3;
+
       col = clamp(col, 0.0, 1.0);
       
-      return extractAlpha(col);
-    }
-
-    vec4 mainImage(vec2 fragCoord) {
-      vec2 center = iResolution.xy * 0.5;
-      float size = min(iResolution.x, iResolution.y);
-      vec2 uv = (fragCoord - center) / size * 2.0;
-      
-      float angle = rot;
-      float s = sin(angle);
-      float c = cos(angle);
-      uv = vec2(c * uv.x - s * uv.y, s * uv.x + c * uv.y);
-      
-      uv.x += hover * hoverIntensity * 0.1 * sin(uv.y * 10.0 + iTime);
-      uv.y += hover * hoverIntensity * 0.1 * sin(uv.x * 10.0 + iTime);
-      
-      return draw(uv);
+      return vec4(col, length(col));
     }
 
     void main() {
-      vec2 fragCoord = vUv * iResolution.xy;
-      vec4 col = mainImage(fragCoord);
-      gl_FragColor = vec4(col.rgb * col.a, col.a);
+      vec2 uv = vUv * 2.0 - 1.0;
+      uv.y *= iResolution.y / iResolution.x;
+      vec4 color = draw(uv, iTime, hover, rot, hue, hoverIntensity);
+      gl_FragColor = color;
     }
   `;
 
-  useEffect(() => {
-    const container = ctnDom.current;
-    if (!container) return;
+  // Removed duplicate ctnDom declaration
 
-    const renderer = new Renderer({ alpha: true, premultipliedAlpha: false });
+  useEffect(() => {
+    if (!ctnDom.current) return;
+
+    const renderer = new Renderer({ dpr: window.devicePixelRatio, alpha: true });
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 0);
-    container.appendChild(gl.canvas);
+    ctnDom.current.appendChild(gl.canvas);
 
     const geometry = new Triangle(gl);
     const program = new Program(gl, {
@@ -177,9 +203,7 @@ export default function Orb({ hue = 0, hoverIntensity = 0.2, rotateOnHover = tru
       fragment: frag,
       uniforms: {
         iTime: { value: 0 },
-        iResolution: {
-          value: new Vec3(gl.canvas.width, gl.canvas.height, gl.canvas.width / gl.canvas.height)
-        },
+        iResolution: { value: new Vec3(gl.canvas.width, gl.canvas.height, gl.canvas.width / gl.canvas.height) },
         hue: { value: hue },
         hover: { value: 0 },
         rot: { value: 0 },
@@ -190,80 +214,73 @@ export default function Orb({ hue = 0, hoverIntensity = 0.2, rotateOnHover = tru
     const mesh = new Mesh(gl, { geometry, program });
 
     function resize() {
-      if (!container) return;
+      const { width, height } = ctnDom.current.getBoundingClientRect();
       const dpr = window.devicePixelRatio || 1;
-      const width = container.clientWidth;
-      const height = container.clientHeight;
       renderer.setSize(width * dpr, height * dpr);
-      gl.canvas.style.width = width + 'px';
-      gl.canvas.style.height = height + 'px';
+      gl.canvas.style.width = width + "px";
+      gl.canvas.style.height = height + "px";
       program.uniforms.iResolution.value.set(gl.canvas.width, gl.canvas.height, gl.canvas.width / gl.canvas.height);
     }
-    window.addEventListener('resize', resize);
     resize();
 
+    window.addEventListener("resize", resize);
+
     let targetHover = 0;
-    let lastTime = 0;
-    let currentRot = 0;
-    const rotationSpeed = 0.3;
+    let rotation = 0;
 
-    const handleMouseMove = e => {
-      const rect = container.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const width = rect.width;
-      const height = rect.height;
-      const size = Math.min(width, height);
-      const centerX = width / 2;
-      const centerY = height / 2;
-      const uvX = ((x - centerX) / size) * 2.0;
-      const uvY = ((y - centerY) / size) * 2.0;
-
-      if (Math.sqrt(uvX * uvX + uvY * uvY) < 0.8) {
+    const mouseMoveHandler = (event) => {
+      const rect = ctnDom.current.getBoundingClientRect();
+      const pos = [
+        (event.clientX - rect.left) / rect.width,
+        1.0 - (event.clientY - rect.top) / rect.height,
+      ];
+      const centeredPos = [
+        2.0 * pos[0] - 1.0,
+        2.0 * pos[1] - 1.0,
+      ];
+      if (Math.sqrt(centeredPos[0] * centeredPos[0] + centeredPos[1] * centeredPos[1]) < 0.9) {
         targetHover = 1;
       } else {
         targetHover = 0;
       }
     };
 
-    const handleMouseLeave = () => {
+    ctnDom.current.addEventListener("mousemove", mouseMoveHandler);
+    ctnDom.current.addEventListener("mouseleave", () => {
       targetHover = 0;
-    };
+    });
 
-    container.addEventListener('mousemove', handleMouseMove);
-    container.addEventListener('mouseleave', handleMouseLeave);
+    let lastTime = 0;
 
-    let rafId;
-    const update = t => {
-      rafId = requestAnimationFrame(update);
-      const dt = (t - lastTime) * 0.001;
+    const animate = (t) => {
+      requestAnimationFrame(animate);
+      const delta = (t - lastTime) * 0.001;
       lastTime = t;
       program.uniforms.iTime.value = t * 0.001;
       program.uniforms.hue.value = hue;
       program.uniforms.hoverIntensity.value = hoverIntensity;
+      program.uniforms.hover.value += (targetHover - program.uniforms.hover.value) * 0.1;
 
-      const effectiveHover = forceHoverState ? 1 : targetHover;
-      program.uniforms.hover.value += (effectiveHover - program.uniforms.hover.value) * 0.1;
-
-      if (rotateOnHover && effectiveHover > 0.5) {
-        currentRot += dt * rotationSpeed;
+      if (rotateOnHover && program.uniforms.hover.value > 0.3) {
+        rotation += delta * 0.5;
       }
-      program.uniforms.rot.value = currentRot;
+      program.uniforms.rot.value = rotation;
 
       renderer.render({ scene: mesh });
     };
-    rafId = requestAnimationFrame(update);
+    animate(0);
 
     return () => {
-      cancelAnimationFrame(rafId);
-      window.removeEventListener('resize', resize);
-      container.removeEventListener('mousemove', handleMouseMove);
-      container.removeEventListener('mouseleave', handleMouseLeave);
-      container.removeChild(gl.canvas);
-      gl.getExtension('WEBGL_lose_context')?.loseContext();
+      window.removeEventListener("resize", resize);
+      ctnDom.current.removeEventListener("mousemove", mouseMoveHandler);
+      ctnDom.current.removeEventListener("mouseleave", () => {});
+      ctnDom.current.removeChild(gl.canvas);
+      cancelAnimationFrame(animate);
+      if (gl.getExtension("WEBGL_lose_context")) {
+        gl.getExtension("WEBGL_lose_context").loseContext();
+      }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hue, hoverIntensity, rotateOnHover, forceHoverState]);
 
-  return <div ref={ctnDom} className="w-full h-full" />;
+  return <div ref={ctnDom} className="w-full h-full rounded-full overflow-hidden" />;
 }
