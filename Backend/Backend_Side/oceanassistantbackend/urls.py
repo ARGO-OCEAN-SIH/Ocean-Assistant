@@ -9,4 +9,5 @@ urlpatterns = [
     path('login/', views.Login.as_view(), name='login'),
     path('process-voice/', views.process_voice, name='process_voice'),
     path('ai-status/', views.ai_status, name='ai_status'),
+    path('test/', views.Test.as_view(), name='test')
 ]
