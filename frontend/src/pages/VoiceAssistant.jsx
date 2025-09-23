@@ -111,7 +111,15 @@ const VoiceAssistant = () => {
   return (
     <div
       ref={containerRef}
-      className="min-h-screen flex flex-col bg-gradient-to-br from-blue-900 via-indigo-950 to-black text-white selection:bg-cyan-400 selection:text-gray-900 relative overflow-hidden"
+      className="min-h-screen flex flex-col text-white selection:bg-cyan-400 selection:text-gray-900 relative overflow-hidden"
+      style={{
+        backgroundImage:
+          "url('https://cdn.pixabay.com/photo/2014/02/26/21/25/jellyfish-275577_1280.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
+      }}
     >
       <Navbar />
       {/* Floating texts - Left */}
