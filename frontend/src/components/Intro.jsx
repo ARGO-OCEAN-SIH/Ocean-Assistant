@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
 
 const floatingTextsLeft = [
-  { id: 1, text: 'Data', style: { top: '10%', left: '10%', color: '#0a202e' } },
-  { id: 3, text: 'AI', style: { top: '30%', left: '5%', color: '#12324f' } },
-  { id: 6, text: 'Marine', style: { top: '50%', left: '12%', color: '#0b2537' } },
-  { id: 9, text: 'Protection', style: { top: '70%', left: '10%', color: '#0a1f31' } },
+  { id: 1, text: 'Data', style: { top: '10%', left: '10%', color: '#3ee0ff' } },
+  { id: 3, text: 'AI', style: { top: '30%', left: '5%', color: '#26c8ff' } },
+  { id: 6, text: 'Marine', style: { top: '50%', left: '12%', color: '#3de7ff' } },
+  { id: 9, text: 'Protection', style: { top: '70%', left: '10%', color: '#32d6ff' } },
 ];
 
 const floatingTextsRight = [
-  { id: 2, text: 'Oceans', style: { top: '15%', right: '12%', color: '#0d2a48' } },
-  { id: 4, text: 'Insights', style: { top: '40%', right: '15%', color: '#0c2949' } },
-  { id: 5, text: 'Explore', style: { top: '60%', right: '10%', color: '#09232d' } },
-  { id: 7, text: 'Ecosystems', style: { top: '80%', right: '12%', color: '#0c243f' } },
-  { id: 8, text: 'Sustainability', style: { top: '90%', right: '15%', color: '#092031' } },
+  { id: 2, text: 'Oceans', style: { top: '15%', right: '12%', color: '#2ec7ff' } },
+  { id: 4, text: 'Insights', style: { top: '40%', right: '15%', color: '#38e4ff' } },
+  { id: 5, text: 'Explore', style: { top: '60%', right: '10%', color: '#3ee0ff' } },
+  { id: 7, text: 'Ecosystems', style: { top: '80%', right: '12%', color: '#2cbfff' } },
+  { id: 8, text: 'Sustainability', style: { top: '90%', right: '15%', color: '#29aaff' } },
 ];
 
 const floatingGraphicsLeft = [
@@ -22,7 +22,7 @@ const floatingGraphicsLeft = [
       <svg
         viewBox="0 0 64 64"
         fill="none"
-        stroke="#0a202e"
+        stroke="#3ee0ff"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -41,7 +41,7 @@ const floatingGraphicsLeft = [
       <svg
         viewBox="0 0 64 64"
         fill="none"
-        stroke="#12324f"
+        stroke="#29aaff"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -63,7 +63,7 @@ const floatingGraphicsRight = [
       <svg
         viewBox="0 0 64 64"
         fill="none"
-        stroke="#0d2a48"
+        stroke="#38e4ff"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -80,7 +80,7 @@ const floatingGraphicsRight = [
       <svg
         viewBox="0 0 64 64"
         fill="none"
-        stroke="#0c2949"
+        stroke="#26c8ff"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -97,7 +97,7 @@ const floatingGraphicsRight = [
       <svg
         viewBox="0 0 64 64"
         fill="none"
-        stroke="#09232d"
+        stroke="#3ee0ff"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -134,9 +134,10 @@ const Intro = () => {
 
   return (
     <div
-      className="relative isolate min-h-screen px-6 pt-14 lg:px-8 overflow-x-hidden text-[#0a202e] font-sans overflow-visible select-none"
+      className="relative isolate min-h-screen px-6 pt-14 lg:px-8 overflow-x-hidden text-[#3de7ff] font-sans overflow-visible select-none"
       style={{
-        backgroundImage: `url('https://png.pngtree.com/thumb_back/fh260/background/20241112/pngtree-explore-a-tropical-island-paradise-with-vibrant-coral-reefs-and-sea-image_16565130.jpg')`,
+        backgroundImage:
+          "url('https://cdn.pixabay.com/photo/2014/02/26/21/25/jellyfish-275577_1280.jpg')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
@@ -153,6 +154,8 @@ const Intro = () => {
             transform: `translateY(${Math.sin((offset + id * 20) / 10) * 8}px) rotate(${(offset + id * 40) / 10}deg)`,
             userSelect: 'none',
             color: style.color,
+            textShadow:
+              '0 0 6px #00bbff, 0 0 12px #33ccff, 0 0 18px #00aaff',
           }}
         >
           {text}
@@ -169,6 +172,8 @@ const Intro = () => {
             transform: `translateY(${Math.sin((offset + id * 20) / 12) * 8}px) rotate(${(offset + id * 40) / 12}deg)`,
             userSelect: 'none',
             color: style.color,
+            textShadow:
+              '0 0 6px #00bbff, 0 0 12px #33ccff, 0 0 18px #00aaff',
           }}
         >
           {text}
@@ -185,7 +190,7 @@ const Intro = () => {
             left: baseStyle.left,
             transform: zigzagTransform(offset, id),
             userSelect: 'none',
-            filter: 'drop-shadow(0 0 6px #0a202ecc)',
+            filter: 'drop-shadow(0 0 8px #26c8ffaa)',
             transition: 'transform 0.1s ease-out',
           }}
         >
@@ -203,7 +208,7 @@ const Intro = () => {
             right: baseStyle.right,
             transform: zigzagTransform(offset, id),
             userSelect: 'none',
-            filter: 'drop-shadow(0 0 6px #0d2a48cc)',
+            filter: 'drop-shadow(0 0 8px #38e4ffbb)',
             transition: 'transform 0.1s ease-out',
           }}
         >
@@ -212,37 +217,37 @@ const Intro = () => {
       ))}
 
       {/* Glowing globe visual */}
-<div
-  aria-hidden="true"
-  className="mx-auto mt-20 w-[180px] h-[180px] rounded-full bg-gradient-radial from-[#0df3ff] to-[#06132b] shadow-glow animate-float-rotate delay-150"
-  style={{ boxShadow: '0 0 36px #0aeefdbb, 0 0 120px #082d4d inset' }}
->
-  <div
-    className="absolute top-[16px] left-[16px] w-[148px] h-[148px] rounded-full border-4 border-[#0bd0ff] shadow-glow-inner opacity-50"
-    style={{ filter: 'drop-shadow(0 0 8px #0a3c55bb)' }}
-  />
-</div>
-
+      <div
+        aria-hidden="true"
+        className="mx-auto mt-20 w-[180px] h-[180px] rounded-full bg-gradient-radial from-[#00d4ff] to-[#001f2a] shadow-glow animate-float-rotate delay-150"
+        style={{ boxShadow: '0 0 36px #00aaffcc, 0 0 120px #001927 inset' }}
+      >
+        <div
+          className="absolute top-[16px] left-[16px] w-[148px] h-[148px] rounded-full border-4 border-[#00bfff] shadow-glow-inner opacity-50"
+          style={{ filter: 'drop-shadow(0 0 8px #0099eecc)' }}
+        />
+      </div>
 
       <div className="mx-auto max-w-2xl text-center py-20 sm:py-28 lg:py-36 relative z-20">
-        <h1 className="hero-title fade-in text-7xl lg:text-8xl font-extrabold tracking-wide text-[#0c4980] drop-shadow-[0_0_30px_rgba(0,100,180,0.8)] mb-8 leading-tight">
+        <h1 className="hero-title fade-in text-7xl lg:text-8xl font-extrabold tracking-wide text-[#00c2ff] drop-shadow-[0_0_30px_rgba(0,194,255,0.85)] mb-8 leading-tight">
           Unlock the Secrets of Our Oceans
         </h1>
-        <p className="hero-tagline fade-in delay-300 text-2xl md:text-3xl max-w-xl mx-auto text-[#0a202e] text-opacity-90 font-semibold leading-relaxed mb-14">
-          Harnessing advanced data analytics to understand,<br />
+        <p className="hero-tagline fade-in delay-300 text-2xl md:text-3xl max-w-xl mx-auto text-[#00c2ffcc] font-semibold leading-relaxed mb-14">
+          Harnessing advanced data analytics to understand,
+          <br />
           protect, and explore Earth’s vital marine ecosystems.
         </p>
         <div className="mt-12 flex flex-wrap items-center justify-center gap-x-10 gap-y-8">
           <a
             href="#dashboard"
-            className="cta-btn rounded-full bg-[#0a202e] text-[#18b8ff] font-extrabold px-10 py-4 text-xl shadow-glow-button transform transition duration-400 hover:scale-110 hover:bg-[#134880] hover:text-[#a6f4ff] focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-[#0db0ff]"
+            className="cta-btn rounded-full bg-[#004c66] text-[#a1e8ff] font-extrabold px-10 py-4 text-xl shadow-glow-button transform transition duration-400 hover:scale-110 hover:bg-[#007bb3] hover:text-[#e0f7ff] focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-[#0099ee]"
             aria-label="Explore Data"
           >
             Explore Data
           </a>
           <a
             href="#chat"
-            className="cta-btn rounded-full bg-[#0a202e] text-[#18b8ff] font-extrabold px-10 py-4 text-xl shadow-glow-button transform transition duration-400 hover:scale-110 hover:bg-[#134880] hover:text-[#a6f4ff] focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-[#0db0ff]"
+            className="cta-btn rounded-full bg-[#004c66] text-[#a1e8ff] font-extrabold px-10 py-4 text-xl shadow-glow-button transform transition duration-400 hover:scale-110 hover:bg-[#007bb3] hover:text-[#e0f7ff] focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-[#0099ee]"
             aria-label="Query Global Ocean Data"
           >
             Query Global Ocean Data
@@ -250,15 +255,20 @@ const Intro = () => {
         </div>
         {/* Partners Section */}
         <section className="mt-24">
-          <h2 className="text-5xl font-semibold text-[#0a3050] mb-16 fade-in delay-600 drop-shadow-glow">
+          <h2 className="text-5xl font-semibold text-[#009ee6] mb-16 fade-in delay-600 drop-shadow-glow">
             Partners
           </h2>
-          <div className="flex justify-center flex-wrap gap-20 text-[#0a202e] text-opacity-90 font-semibold tracking-wide select-none">
-            {['OceanDataLab', 'NOAA', 'World Ocean Database', 'Marine Analytics Co.'].map((partner, i) => (
+          <div className="flex justify-center flex-wrap gap-20 text-[#0099eecc] font-semibold tracking-wide select-none">
+            {[
+              'OceanDataLab',
+              'NOAA',
+              'World Ocean Database',
+              'Marine Analytics Co.',
+            ].map((partner, i) => (
               <a
                 key={i}
                 href={`#partner${i + 1}`}
-                className="partner-link relative inline-block text-2xl hover:text-[#0db0ff] transition-colors duration-300 underline-effect"
+                className="partner-link relative inline-block text-2xl hover:text-[#00cfff] transition-colors duration-300 underline-effect"
               >
                 {partner}
               </a>
@@ -266,12 +276,12 @@ const Intro = () => {
           </div>
         </section>
         {/* Navigation Links */}
-        <nav className="quick-links mt-20 flex justify-center gap-16 text-[#0d4a8f] font-bold">
+        <nav className="quick-links mt-20 flex justify-center gap-16 text-[#0099eecc] font-bold">
           {['about', 'data', 'dashboard'].map((navItem) => (
             <a
               key={navItem}
               href={`#${navItem}`}
-              className="nav-link relative px-6 py-3 rounded-full hover:text-[#0a3050] hover:bg-[#0db0ff] transition-colors duration-300 cursor-pointer underline-effect"
+              className="nav-link relative px-6 py-3 rounded-full hover:text-[#005a8a] hover:bg-[#00bfff] transition-colors duration-300 cursor-pointer underline-effect"
             >
               {navItem.charAt(0).toUpperCase() + navItem.slice(1)}
             </a>
@@ -297,16 +307,16 @@ const Intro = () => {
         }
         /* Glow shadows */
         .shadow-glow {
-          box-shadow: 0 0 55px #0aeefdcc, 0 0 140px #082d4d inset;
+          box-shadow: 0 0 55px #00cfffcc, 0 0 140px #001a2b inset;
         }
         .shadow-glow-inner {
-          box-shadow: 0 0 38px #0b98ffdd, 0 0 90px #0a7dd6aa inset;
+          box-shadow: 0 0 38px #00aaffdd, 0 0 90px #007bb3aa inset;
         }
         .shadow-glow-button {
-          box-shadow: 0 0 22px #18b8ffdd, 0 0 40px #0a7bd6bb;
+          box-shadow: 0 0 22px #00bbffdd, 0 0 40px #0077ccbb;
         }
         .drop-shadow-glow {
-          filter: drop-shadow(0 0 15px #0b98ffcc);
+          filter: drop-shadow(0 0 15px #00aaffcc);
         }
         /* Fade in */
         .fade-in {
@@ -330,9 +340,9 @@ const Intro = () => {
         /* Text glow */
         .text-glow {
           text-shadow:
-            0 0 15px rgba(26, 142, 196, 0.8),
-            0 0 30px rgba(21, 121, 194, 0.6),
-            0 0 45px rgba(18, 103, 176, 0.5);
+            0 0 15px rgba(26, 142, 196, 0.9),
+            0 0 30px rgba(21, 121, 194, 0.8),
+            0 0 45px rgba(18, 103, 176, 0.7);
           color: transparent;
           background: linear-gradient(90deg, #0a8cd1, #187ec5, #0a8cd1);
           background-clip: text;
@@ -349,7 +359,7 @@ const Intro = () => {
           left: 0;
           width: 0;
           height: 3px;
-          background-color: #0a8cd1;
+          background-color: #00bfff;
           border-radius: 4px;
           transition: width 0.4s ease;
           z-index: 10;
