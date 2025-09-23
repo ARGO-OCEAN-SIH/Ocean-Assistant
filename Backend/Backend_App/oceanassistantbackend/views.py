@@ -8,7 +8,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 import os
-
+from django.utils.decorators import method_decorator
 # Import your LLM service
 from Backend_Side.services.llm_service import free_processor  # ✅ Groq LLM
 
@@ -99,3 +99,38 @@ def ai_status(request):
         "completely_free": False,
         "message": "Uses Groq API - requires valid API key"
     })
+
+@method_decorator(csrf_exempt, name='dispatch')
+class Test(View):
+    def get(self, request):
+        return render(request, 'test.html')
+    
+    def post(self, request):
+        # Simply confirm receipt of voice input
+        try:
+            # Get the transcript from POST data
+            data = json.loads(request.body)
+            transcript = data.get('transcript', '')
+            
+            print(f"🎯 Received voice input: '{transcript}'")  # This will print to Django console
+            
+            if not transcript:
+                return JsonResponse({
+                    'success': False, 
+                    'message': 'No transcript received'
+                }, status=400)
+            
+            # Just return a confirmation with the received text
+            return JsonResponse({
+                'success': True,
+                'message': 'Voice input received successfully!',
+                'received_text': transcript,
+                'backend_confirmation': f'Django backend confirmed: "{transcript}"'
+            })
+            
+        except Exception as e:
+            print(f"❌ Error: {str(e)}")
+            return JsonResponse({
+                'success': False,
+                'error': str(e)
+            }, status=500)

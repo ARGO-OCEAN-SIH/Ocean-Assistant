@@ -1,5 +1,5 @@
 # Backend_Side/services/llm_service.py
-from openai import OpenAI
+
 import os
 import json
 from dotenv import load_dotenv

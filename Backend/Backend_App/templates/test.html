@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Input Test - Django Backend</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Orbitron', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f2027 0%, #2c5364 100%);
+            min-height: 100vh;
+            color: #e0e7ef;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            color: #00eaff;
+            text-shadow: 0 0 16px #00eaff88;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #e0e7ef;
+            opacity: 0.8;
+            margin-bottom: 40px;
+        }
+
+        .mic-btn {
+            background: linear-gradient(90deg, #00eaff 0%, #1a237e 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            font-size: 2.5rem;
+            cursor: pointer;
+            box-shadow: 0 0 30px #00eaff88;
+            transition: all 0.3s;
+            margin: 20px 0;
+        }
+
+        .mic-btn.listening {
+            background: linear-gradient(90deg, #ff416c 0%, #ff4b2b 100%);
+            box-shadow: 0 0 40px #ff416ccc;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .status-box {
+            background: #181b3a;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #00eaff33;
+            min-height: 60px;
+        }
+
+        .user-input {
+            color: #00eaff;
+            font-size: 1.3rem;
+        }
+
+        .backend-response {
+            color: #7CFC00;
+            font-size: 1.1rem;
+            background: #101322;
+        }
+
+        .status-message {
+            color: #00eaff;
+            margin: 15px 0;
+            font-size: 1.1rem;
+        }
+
+        .debug-info {
+            background: #00000044;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">🎤 Voice Input Test</h1>
+        <p class="subtitle">Speak and see the confirmation from Django backend</p>
+
+        <!-- Mic Button -->
+        <button id="micButton" class="mic-btn">🎤</button>
+
+        <!-- Status Messages -->
+        <div class="status-message" id="statusMessage">
+            Click the microphone and start speaking
+        </div>
+
+        <!-- User Input Display -->
+        <div class="status-box user-input" id="userInput">
+            Your speech will appear here...
+        </div>
+
+        <!-- Backend Response -->
+        <div class="status-box backend-response" id="backendResponse">
+            Django backend response will appear here...
+        </div>
+
+        <!-- Debug Info -->
+        <div class="debug-info" id="debugInfo">
+            <strong>Backend Status:</strong> Ready to receive voice input
+        </div>
+    </div>
+
+<script>
+    // Mode Switching
+    const chatMode = document.getElementById('chatMode');
+    const voiceMode = document.getElementById('voiceMode');
+    const switchToVoiceBtn = document.getElementById('switchToVoiceBtn');
+    const switchToChatBtn = document.getElementById('switchToChatBtn');
+
+    switchToVoiceBtn.addEventListener('click', () => {
+        chatMode.classList.add('hidden');
+        voiceMode.classList.remove('hidden');
+    });
+
+    switchToChatBtn.addEventListener('click', () => {
+        voiceMode.classList.add('hidden');
+        chatMode.classList.remove('hidden');
+    });
+
+    // Chat Mode Functionality
+    document.getElementById('sendButton').addEventListener('click', sendMessage);
+    document.getElementById('messageInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    });
+
+    function sendMessage() {
+        const input = document.getElementById('messageInput');
+        const message = input.value.trim();
+        
+        if (message) {
+            // Add user message
+            const messageList = document.getElementById('messageList');
+            const userMsg = document.createElement('div');
+            userMsg.className = 'message-bubble user-msg';
+            userMsg.textContent = message;
+            messageList.appendChild(userMsg);
+            
+            // Clear input
+            input.value = '';
+            
+            // Send to Django backend
+            sendToBackend(message, 'chat');
+            
+            // Scroll to bottom
+            messageList.scrollTop = messageList.scrollHeight;
+        }
+    }
+
+    // Voice Assistant Functionality
+    const micButton = document.getElementById('micButton');
+    const voiceTranscript = document.getElementById('voiceTranscript');
+    const aiResponse = document.getElementById('aiResponse');
+
+    let recognition = null;
+    let isListening = false;
+
+    // Check if browser supports speech recognition
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+        micButton.disabled = true;
+        micButton.textContent = '❌ Not Supported';
+        voiceTranscript.textContent = 'Speech recognition not supported in this browser.';
+    }
+
+    micButton.addEventListener('click', toggleListening);
+
+    function toggleListening() {
+        if (!SpeechRecognition) return;
+
+        if (isListening) {
+            stopListening();
+        } else {
+            startListening();
+        }
+    }
+
+    function startListening() {
+        recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = 'en-US';
+
+        recognition.onstart = () => {
+            isListening = true;
+            micButton.classList.add('listening');
+            micButton.textContent = '🛑 Stop Listening';
+            voiceTranscript.textContent = 'Listening...';
+            aiResponse.textContent = 'Speak now...';
+        };
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            voiceTranscript.textContent = transcript;
+            sendToBackend(transcript, 'voice');
+        };
+
+        recognition.onerror = (event) => {
+            console.error('Speech recognition error:', event.error);
+            voiceTranscript.textContent = 'Error: ' + event.error;
+            aiResponse.textContent = 'Error occurred during speech recognition';
+            stopListening();
+        };
+
+        recognition.onend = () => {
+            stopListening();
+        };
+
+        recognition.start();
+    }
+
+    function stopListening() {
+        if (recognition) {
+            recognition.stop();
+        }
+        isListening = false;
+        micButton.classList.remove('listening');
+        micButton.textContent = '🎤 Start Voice';
+    }
+
+    // Send data to Django backend
+    async function sendToBackend(text, mode) {
+        const messageList = document.getElementById('messageList');
+        const aiResponse = document.getElementById('aiResponse');
+        
+        try {
+            if (mode === 'chat') {
+                // Show loading message in chat
+                const loadingMsg = document.createElement('div');
+                loadingMsg.className = 'message-bubble system-msg';
+                loadingMsg.textContent = 'Sending to backend...';
+                loadingMsg.id = 'loading-msg';
+                messageList.appendChild(loadingMsg);
+                messageList.scrollTop = messageList.scrollHeight;
+            } else if (mode === 'voice') {
+                aiResponse.textContent = 'Sending to Django backend...';
+            }
+
+            const response = await fetch('/test/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+                body: JSON.stringify({
+                    transcript: text,
+                    mode: mode
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                if (mode === 'chat') {
+                    // Remove loading message
+                    const loadingMsg = document.getElementById('loading-msg');
+                    if (loadingMsg) loadingMsg.remove();
+                    
+                    // Add backend response
+                    const systemMsg = document.createElement('div');
+                    systemMsg.className = 'message-bubble system-msg';
+                    systemMsg.innerHTML = `
+                        <strong>✅ Backend Received:</strong> "${data.received_text}"<br>
+                        <strong>Confirmation:</strong> ${data.backend_confirmation}
+                    `;
+                    messageList.appendChild(systemMsg);
+                } else if (mode === 'voice') {
+                    aiResponse.innerHTML = `
+                        <strong>✅ Backend Confirmation:</strong><br>
+                        ${data.message}<br>
+                        <strong>Received:</strong> "${data.received_text}"<br>
+                        <strong>Backend:</strong> ${data.backend_confirmation}
+                    `;
+                    
+                    // Optional: Speak the confirmation
+                    speakResponse(`Backend confirmed receipt of: ${data.received_text}`);
+                }
+                
+                // Print to console for debugging
+                console.log('✅ Backend response:', data);
+                
+            } else {
+                throw new Error(data.message || data.error);
+            }
+
+        } catch (error) {
+            console.error('❌ Error sending to backend:', error);
+            
+            if (mode === 'chat') {
+                const loadingMsg = document.getElementById('loading-msg');
+                if (loadingMsg) loadingMsg.remove();
+                
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'message-bubble system-msg';
+                errorMsg.style.background = '#ff4444';
+                errorMsg.textContent = `Error: ${error.message}`;
+                messageList.appendChild(errorMsg);
+            } else if (mode === 'voice') {
+                aiResponse.innerHTML = `
+                    <strong>❌ Error:</strong><br>
+                    ${error.message}
+                `;
+            }
+            
+            messageList.scrollTop = messageList.scrollHeight;
+        }
+    }
+
+    function speakResponse(text) {
+        if ('speechSynthesis' in window) {
+            const speech = new SpeechSynthesisUtterance(text);
+            speech.rate = 0.9;
+            speech.pitch = 1;
+            window.speechSynthesis.speak(speech);
+        }
+    }
+
+    // CSRF token helper function for Django
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+</body>
+</html>
