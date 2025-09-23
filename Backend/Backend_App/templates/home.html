@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home - My Site</title>
+    <style>
+      /* Reset default margins */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      body {
+        font-family: Arial, sans-serif;
+        background: #f9f9f9;
+        color: #333;
+      }
+      
+      /* Navbar */
+      nav {
+        background-color: #2c3e50;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 30px;
+      }
+      
+      nav .logo {
+        font-size: 22px;
+        font-weight: bold;
+      }
+      
+      nav .nav-links {
+        list-style: none;
+        display: flex;
+        gap: 20px;
+      }
+      
+      nav .nav-links li a {
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+        transition: 0.3s;
+      }
+      
+      nav .nav-links li a:hover {
+        color: #1abc9c;
+      }
+      
+      /* Hero Section */
+      .hero {
+        text-align: center;
+        padding: 80px 20px;
+        background: linear-gradient(to right, #1abc9c, #16a085);
+        color: white;
+      }
+      
+      .hero h1 {
+        font-size: 40px;
+        margin-bottom: 15px;
+      }
+      
+      .hero p {
+        font-size: 18px;
+        margin-bottom: 20px;
+      }
+      
+      /* Messages */
+      .messages {
+        padding: 15px;
+        margin: 10px 0;
+      }
+      
+      .success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+
+      /* Voice result styles */
+      .user-message {
+        color: blue;
+        margin: 10px 0;
+        padding: 10px;
+        background: #f0f8ff;
+        border-radius: 5px;
+      }
+      
+      .ai-message {
+        color: green;
+        margin: 10px 0;
+        padding: 10px;
+        background: #f0fff0;
+        border-radius: 5px;
+      }
+      
+      .error-message {
+        color: red;
+        margin: 10px 0;
+        padding: 10px;
+        background: #fff0f0;
+        border-radius: 5px;
+      }
+      
+      .source-info {
+        color: gray;
+        font-size: 12px;
+        margin-top: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav>
+      <div class="logo">MySite</div>
+      <ul class="nav-links">
+        <li>
+          <a href="{% url 'backend:home' %}">Home</a>
+        </li>
+        <li>
+          <a href="{% url 'backend:register' %}">Register</a>
+        </li>
+        <li>
+          <a href="{% url 'backend:login' %}">Login</a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Display messages -->
+    {% if messages %}
+      <div class="messages">
+        {% for message in messages %}
+          <div class="{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <h1>Welcome to MySite</h1>
+      <p>Explore ocean of possibilities with Django 🚀</p>
+      <div class="voice-container" style="margin: 20px; padding: 20px; background: white; border-radius: 10px;">
+        <h3>Real-time Voice Input</h3>
+        <button id="start-voice">Start Listening</button>
+        <button id="stop-voice" disabled>Stop Listening</button>
+        <div id="voice-status">Ready to listen...</div>
+        <div id="voice-result" style="margin-top: 20px; min-height: 100px; border: 1px solid #ccc; padding: 10px;"></div>
+      </div>
+    </section>
+
+    <script>
+      function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+          const cookies = document.cookie.split(';');
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+
+      class FreeVoiceProcessor {
+        constructor() {
+          this.recognition = null;
+          this.isListening = false;
+        }
+
+        startListening() {
+          try {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+              alert('Speech recognition not supported in this browser. Use Chrome or Edge.');
+              return;
+            }
+
+            this.recognition = new SpeechRecognition();
+            this.recognition.continuous = true;
+            this.recognition.interimResults = true;
+            this.recognition.lang = 'en-US';
+
+            this.recognition.onresult = (event) => {
+              let finalText = '';
+              for (let i = event.resultIndex; i < event.results.length; i++) {
+                if (event.results[i].isFinal) {
+                  finalText += event.results[i][0].transcript;
+                }
+              }
+              if (finalText) {
+                this.sendToAI(finalText);
+              }
+            };
+
+            this.recognition.onerror = (event) => {
+              console.error('Speech recognition error:', event.error);
+              document.getElementById('voice-status').textContent = 'Error: ' + event.error;
+            };
+
+            this.recognition.onend = () => {
+              this.isListening = false;
+              document.getElementById('start-voice').disabled = false;
+              document.getElementById('stop-voice').disabled = true;
+              document.getElementById('voice-status').textContent = 'Stopped';
+            };
+
+            this.recognition.start();
+            this.isListening = true;
+            document.getElementById('start-voice').disabled = true;
+            document.getElementById('stop-voice').disabled = false;
+            document.getElementById('voice-status').textContent = 'Listening...';
+
+          } catch (error) {
+            alert("Error starting voice recognition: " + error.message);
+          }
+        }
+
+        stopListening() {
+          if (this.recognition) {
+            this.recognition.stop();
+          }
+          this.isListening = false;
+          document.getElementById('start-voice').disabled = false;
+          document.getElementById('stop-voice').disabled = true;
+          document.getElementById('voice-status').textContent = 'Stopped';
+        }
+
+        async sendToAI(text) {
+          try {
+            // Show user message
+            document.getElementById('voice-result').innerHTML += `
+              <div class="user-message">
+                <strong>You:</strong> ${text}
+              </div>
+            `;
+
+            // ✅ CORRECTED: Use /api/process_query/ endpoint
+            const response = await fetch('/api/process_query/', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+              },
+              body: JSON.stringify({ text: text })
+            });
+
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            
+            // Show AI response with source information
+            document.getElementById('voice-result').innerHTML += `
+              <div class="ai-message">
+                <strong>AI:</strong> ${data.response}
+                <div class="source-info">Source: ${data.source}</div>
+              </div>
+            `;
+            
+            // Auto-scroll to bottom
+            const resultDiv = document.getElementById('voice-result');
+            resultDiv.scrollTop = resultDiv.scrollHeight;
+
+          } catch (error) {
+            console.error('API Error:', error);
+            document.getElementById('voice-result').innerHTML += `
+              <div class="error-message">
+                <strong>Error:</strong> ${error.message}
+              </div>
+            `;
+          }
+        }
+      }
+
+      // Initialize
+      const voiceProcessor = new FreeVoiceProcessor();
+
+      document.getElementById('start-voice').addEventListener('click', () => {
+        voiceProcessor.startListening();
+      });
+
+      document.getElementById('stop-voice').addEventListener('click', () => {
+        voiceProcessor.stopListening();
+      });
+
+      // Optional: Test button for quick testing
+      document.addEventListener('DOMContentLoaded', function() {
+        // Add test buttons for quick debugging
+        const testContainer = document.createElement('div');
+        testContainer.style.margin = '20px';
+        testContainer.style.padding = '10px';
+        testContainer.style.background = '#eee';
+        testContainer.style.borderRadius = '5px';
+        testContainer.innerHTML = `
+          <h4>Test Queries:</h4>
+          <button onclick="voiceProcessor.sendToAI('show me warm waters')">Test Database Query</button>
+          <button onclick="voiceProcessor.sendToAI('tell me about ocean temperature')">Test LLM Query</button>
+          <button onclick="voiceProcessor.sendToAI('find north atlantic data')">Test Location Query</button>
+        `;
+        document.querySelector('.voice-container').appendChild(testContainer);
+      });
+    </script>
+  </body>
+</html>
