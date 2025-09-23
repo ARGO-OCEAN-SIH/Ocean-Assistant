@@ -17,7 +17,17 @@ const Login = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-900 via-indigo-900 to-black text-white selection:bg-cyan-500 selection:text-gray-900">
+    <div
+      className="flex flex-col min-h-screen text-white selection:bg-cyan-500 selection:text-gray-900"
+      style={{
+        backgroundImage:
+          "url('https://cdn.pixabay.com/photo/2014/02/26/21/25/jellyfish-275577_1280.jpg')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed',
+      }}
+    >
       <Navbar />
       <main className="flex-grow flex justify-center items-center p-4">
         <section className="relative bg-gray-800/90 rounded-3xl shadow-2xl max-w-md w-full p-8 backdrop-blur-lg border border-cyan-600 ring-1 ring-cyan-500 sm:max-w-lg sm:p-10 lg:max-w-xl">
