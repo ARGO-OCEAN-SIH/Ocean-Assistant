@@ -18,10 +18,20 @@ export default function Teams() {
   };
 
   return (
-    <div
-      id="teams-section"
-      className="bg-gray-900 py-24 sm:py-32 px-6 sm:px-12 lg:px-24 text-[#ccefff] font-sans select-none"
-    >
+   <div
+  id="teams-section"
+  className="py-24 sm:py-32 px-6 sm:px-12 lg:px-24 text-[#ccefff] font-sans select-none"
+  style={{
+    backgroundImage: `url('https://cdn.pixabay.com/photo/2014/02/26/21/25/jellyfish-275577_1280.jpg')`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    backgroundAttachment: 'fixed',
+    minHeight: '100vh',
+    width: '100%',
+  }}
+>
+
       <div className="mx-auto max-w-7xl">
         <div className="max-w-xl mx-auto text-center">
           <h2 className="text-4xl font-extrabold tracking-tight text-cyan-400 drop-shadow-lg sm:text-5xl mb-6">
