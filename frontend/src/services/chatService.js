@@ -36,7 +36,7 @@ export const initWebSocket = (onMessage) => {
 export const sendMessage = async (message) => {
     try {
         const response = await fetch(`${API_BASE_URL}/api/process_query/`, {
-            method: 'POST',
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
             },
