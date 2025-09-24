@@ -19,20 +19,19 @@ const Intro = () => {
         <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
           <div className="hidden sm:mb-8 sm:flex sm:justify-center">
             <div className="relative rounded-full px-3 py-1 text-sm/6 text-gray-400 ring-1 ring-white/10 hover:ring-white/20">
-              Announcing our next round of funding.{' '}
+              Smart Ocean Data Analysis{' '}
               <a href="#" className="font-semibold text-indigo-400">
                 <span aria-hidden="true" className="absolute inset-0" />
-                Read more <span aria-hidden="true">&rarr;</span>
+                Learn more <span aria-hidden="true">&rarr;</span>
               </a>
             </div>
           </div>
           <div className="text-center">
             <h1 className="text-5xl font-semibold tracking-tight text-balance text-white sm:text-7xl">
-              Data to enrich your online business
+              FloatChat - AI-Powered Ocean Data Discovery
             </h1>
             <p className="mt-8 text-lg font-medium text-pretty text-gray-400 sm:text-xl/8">
-              Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet
-              fugiat veniam occaecat.
+              An intelligent conversational interface for exploring ARGO ocean data. Query, visualize, and analyze oceanographic information using natural language - making complex ocean data accessible to everyone.
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <a

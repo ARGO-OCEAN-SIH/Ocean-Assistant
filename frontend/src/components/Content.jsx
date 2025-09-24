@@ -33,13 +33,12 @@ export default function Content() {
         <div className="lg:col-span-2 lg:col-start-1 lg:row-start-1 lg:mx-auto lg:grid lg:w-full lg:max-w-7xl lg:grid-cols-2 lg:gap-x-8 lg:px-8">
           <div className="lg:pr-4">
             <div className="lg:max-w-lg">
-              <p className="text-base/7 font-semibold text-indigo-400">Deploy faster</p>
+              <p className="text-base/7 font-semibold text-indigo-400">How It Works</p>
               <h1 className="mt-2 text-4xl font-semibold tracking-tight text-pretty text-white sm:text-5xl">
-                A better workflow
+                Smart Ocean Data Analysis
               </h1>
               <p className="mt-6 text-xl/8 text-gray-300">
-                Aliquet nec orci mattis amet quisque ullamcorper neque, nibh sem. At arcu, sit dui mi, nibh dui, diam
-                eget aliquam. Quisque id at vitae feugiat egestas.
+                Our system transforms complex oceanographic data into accessible insights through advanced AI technology and intuitive visualizations. From ARGO float data to BGC parameters, explore the ocean's secrets through natural conversation.
               </p>
             </div>
           </div>
@@ -64,37 +63,28 @@ export default function Content() {
                 <li className="flex gap-x-3">
                   <CloudArrowUpIcon aria-hidden="true" className="mt-1 size-5 flex-none text-indigo-400" />
                   <span>
-                    <strong className="font-semibold text-white">Push to deploy.</strong> Lorem ipsum, dolor sit amet
-                    consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate
-                    blanditiis ratione.
+                    <strong className="font-semibold text-white">Data Processing Pipeline.</strong> Advanced system that ingests ARGO NetCDF files and converts them into structured formats, making complex oceanographic data easily accessible and queryable.
                   </span>
                 </li>
                 <li className="flex gap-x-3">
                   <LockClosedIcon aria-hidden="true" className="mt-1 size-5 flex-none text-indigo-400" />
                   <span>
-                    <strong className="font-semibold text-white">SSL certificates.</strong> Anim aute id magna aliqua ad
-                    ad non deserunt sunt. Qui irure qui lorem cupidatat commodo.
+                    <strong className="font-semibold text-white">AI-Powered Analysis.</strong> Utilizes state-of-the-art LLMs and RAG pipelines to understand natural language queries and provide meaningful insights from complex oceanographic data.
                   </span>
                 </li>
                 <li className="flex gap-x-3">
                   <ServerIcon aria-hidden="true" className="mt-1 size-5 flex-none text-indigo-400" />
                   <span>
-                    <strong className="font-semibold text-white">Database backups.</strong> Ac tincidunt sapien vehicula
-                    erat auctor pellentesque rhoncus. Et magna sit morbi lobortis.
+                    <strong className="font-semibold text-white">Interactive Visualization.</strong> Explore data through interactive dashboards featuring mapped trajectories, depth-time plots, and profile comparisons with intuitive controls.
                   </span>
                 </li>
               </ul>
               <p className="mt-8">
-                Et vitae blandit facilisi magna lacus commodo. Vitae sapien duis odio id et. Id blandit molestie auctor
-                fermentum dignissim. Lacus diam tincidunt ac cursus in vel. Mauris varius vulputate et ultrices hac
-                adipiscing egestas. Iaculis convallis ac tempor et ut. Ac lorem vel integer orci.
+                Our system handles a wide range of oceanographic data, from satellite observations to in-situ measurements including CTD casts, Argo floats, and BGC sensors. The platform is designed to be extensible, supporting future integration of additional data sources.
               </p>
-              <h2 className="mt-16 text-2xl font-bold tracking-tight text-white">No server? No problem.</h2>
+              <h2 className="mt-16 text-2xl font-bold tracking-tight text-white">Natural Language Queries</h2>
               <p className="mt-6">
-                Id orci tellus laoreet id ac. Dolor, aenean leo, ac etiam consequat in. Convallis arcu ipsum urna nibh.
-                Pharetra, euismod vitae interdum mauris enim, consequat vulputate nibh. Maecenas pellentesque id sed
-                tellus mauris, ultrices mauris. Tincidunt enim cursus ridiculus mi. Pellentesque nam sed nullam sed diam
-                turpis ipsum eu a sed convallis diam.
+                Ask questions like "Show me salinity profiles near the equator in March 2023" or "Compare BGC parameters in the Arabian Sea for the last 6 months". Our AI system translates these natural language queries into precise database operations, retrieving and visualizing the exact data you need.
               </p>
             </div>
           </div>
