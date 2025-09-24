@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
 
 const floatingTextsLeft = [
-  { id: 1, text: 'Data', style: { top: '10%', left: '10%', color: '#3ee0ff' } },
-  { id: 3, text: 'AI', style: { top: '30%', left: '5%', color: '#26c8ff' } },
-  { id: 6, text: 'Marine', style: { top: '50%', left: '12%', color: '#3de7ff' } },
-  { id: 9, text: 'Protection', style: { top: '70%', left: '10%', color: '#32d6ff' } },
+  { id: 1, text: 'Data', style: { top: '10%', left: '10%' } },
+  { id: 3, text: 'AI', style: { top: '30%', left: '5%' } },
+  { id: 6, text: 'Marine', style: { top: '50%', left: '12%' } },
+  { id: 9, text: 'Protection', style: { top: '70%', left: '10%' } },
 ];
 
 const floatingTextsRight = [
-  { id: 2, text: 'Oceans', style: { top: '15%', right: '12%', color: '#2ec7ff' } },
-  { id: 4, text: 'Insights', style: { top: '40%', right: '15%', color: '#38e4ff' } },
-  { id: 5, text: 'Explore', style: { top: '60%', right: '10%', color: '#3ee0ff' } },
-  { id: 7, text: 'Ecosystems', style: { top: '80%', right: '12%', color: '#2cbfff' } },
-  { id: 8, text: 'Sustainability', style: { top: '90%', right: '15%', color: '#29aaff' } },
+  { id: 2, text: 'Oceans', style: { top: '15%', right: '12%' } },
+  { id: 4, text: 'Insights', style: { top: '40%', right: '15%' } },
+  { id: 5, text: 'Explore', style: { top: '60%', right: '10%' } },
+  { id: 7, text: 'Ecosystems', style: { top: '80%', right: '12%' } },
+  { id: 8, text: 'Sustainability', style: { top: '90%', right: '15%' } },
 ];
 
 const floatingGraphicsLeft = [
@@ -22,7 +22,7 @@ const floatingGraphicsLeft = [
       <svg
         viewBox="0 0 64 64"
         fill="none"
-        stroke="#3ee0ff"
+        stroke="#ffffffcc"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -41,7 +41,7 @@ const floatingGraphicsLeft = [
       <svg
         viewBox="0 0 64 64"
         fill="none"
-        stroke="#29aaff"
+        stroke="#ddddddcc"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -63,7 +63,7 @@ const floatingGraphicsRight = [
       <svg
         viewBox="0 0 64 64"
         fill="none"
-        stroke="#38e4ff"
+        stroke="#ffffffcc"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -80,7 +80,7 @@ const floatingGraphicsRight = [
       <svg
         viewBox="0 0 64 64"
         fill="none"
-        stroke="#26c8ff"
+        stroke="#eeeeeecc"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -97,7 +97,7 @@ const floatingGraphicsRight = [
       <svg
         viewBox="0 0 64 64"
         fill="none"
-        stroke="#3ee0ff"
+        stroke="#ffffffcc"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -134,52 +134,55 @@ const Intro = () => {
 
   return (
     <div
-      className="relative isolate min-h-screen px-6 pt-14 lg:px-8 overflow-x-hidden text-[#3de7ff] font-sans overflow-visible select-none"
+      className="relative isolate min-h-screen px-6 pt-14 lg:px-8 overflow-x-hidden overflow-visible select-none"
       style={{
-        backgroundImage:
-          "url('https://cdn.pixabay.com/photo/2014/02/26/21/25/jellyfish-275577_1280.jpg')",
+        fontFamily: "'Poppins', system-ui, sans-serif",
+        backgroundImage: "url('https://wallpapercave.com/wp/wp2074532.jpg')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         backgroundAttachment: 'fixed',
+        color: 'white', // Ensure all text is white by default
       }}
     >
       {/* Floating texts left side */}
       {floatingTextsLeft.map(({ id, text, style }) => (
         <span
           key={id}
-          className="absolute font-extrabold pointer-events-none text-2xl transform-origin-center animate-rotate-slow"
+          className="absolute pointer-events-none floating-text"
           style={{
             ...style,
+            fontWeight: 700,
+            fontSize: '2.3rem',
+            letterSpacing: '0.1em',
+            color: 'white',
+            textShadow: '0 0 12px #ffffffcc, 0 0 20px #b0e7ffcc',
             transform: `translateY(${Math.sin((offset + id * 20) / 10) * 8}px) rotate(${(offset + id * 40) / 10}deg)`,
             userSelect: 'none',
-            color: style.color,
-            textShadow:
-              '0 0 6px #00bbff, 0 0 12px #33ccff, 0 0 18px #00aaff',
           }}
         >
           {text}
         </span>
       ))}
-
       {/* Floating texts right side */}
       {floatingTextsRight.map(({ id, text, style }) => (
         <span
           key={id}
-          className="absolute font-extrabold pointer-events-none text-2xl transform-origin-center animate-rotate-slow"
+          className="absolute pointer-events-none floating-text"
           style={{
             ...style,
+            fontWeight: 700,
+            fontSize: '2.3rem',
+            letterSpacing: '0.1em',
+            color: 'white',
+            textShadow: '0 0 12px #ffffffcc, 0 0 20px #b0e7ffcc',
             transform: `translateY(${Math.sin((offset + id * 20) / 12) * 8}px) rotate(${(offset + id * 40) / 12}deg)`,
             userSelect: 'none',
-            color: style.color,
-            textShadow:
-              '0 0 6px #00bbff, 0 0 12px #33ccff, 0 0 18px #00aaff',
           }}
         >
           {text}
         </span>
       ))}
-
       {/* Floating graphics left side */}
       {floatingGraphicsLeft.map(({ id, svg, baseStyle }) => (
         <div
@@ -190,14 +193,13 @@ const Intro = () => {
             left: baseStyle.left,
             transform: zigzagTransform(offset, id),
             userSelect: 'none',
-            filter: 'drop-shadow(0 0 8px #26c8ffaa)',
+            filter: 'drop-shadow(0 0 10px #ffffffcc)',
             transition: 'transform 0.1s ease-out',
           }}
         >
           {svg}
         </div>
       ))}
-
       {/* Floating graphics right side */}
       {floatingGraphicsRight.map(({ id, svg, baseStyle }) => (
         <div
@@ -208,31 +210,54 @@ const Intro = () => {
             right: baseStyle.right,
             transform: zigzagTransform(offset, id),
             userSelect: 'none',
-            filter: 'drop-shadow(0 0 8px #38e4ffbb)',
+            filter: 'drop-shadow(0 0 10px #ffffffcc)',
             transition: 'transform 0.1s ease-out',
           }}
         >
           {svg}
         </div>
       ))}
-
       {/* Glowing globe visual */}
       <div
         aria-hidden="true"
         className="mx-auto mt-20 w-[180px] h-[180px] rounded-full bg-gradient-radial from-[#00d4ff] to-[#001f2a] shadow-glow animate-float-rotate delay-150"
-        style={{ boxShadow: '0 0 36px #00aaffcc, 0 0 120px #001927 inset' }}
+        style={{
+          boxShadow: '0 0 56px #00d4ffcc, 0 0 160px #001927 inset',
+        }}
       >
         <div
-          className="absolute top-[16px] left-[16px] w-[148px] h-[148px] rounded-full border-4 border-[#00bfff] shadow-glow-inner opacity-50"
-          style={{ filter: 'drop-shadow(0 0 8px #0099eecc)' }}
+          className="absolute top-[16px] left-[16px] w-[148px] h-[148px] rounded-full border-4 border-[#00bfff] shadow-glow-inner opacity-70"
+          style={{
+            filter: 'drop-shadow(0 0 14px #0099eecc)',
+          }}
         />
       </div>
-
       <div className="mx-auto max-w-2xl text-center py-20 sm:py-28 lg:py-36 relative z-20">
-        <h1 className="hero-title fade-in text-7xl lg:text-8xl font-extrabold tracking-wide text-[#00c2ff] drop-shadow-[0_0_30px_rgba(0,194,255,0.85)] mb-8 leading-tight">
+        <h1
+          className="hero-title fade-in mb-8 leading-tight"
+          style={{
+            fontFamily: "'Poppins', system-ui, sans-serif",
+            fontSize: '4.5rem',
+            fontWeight: 900,
+            letterSpacing: '0.06em',
+            color: 'white',
+            textShadow: '0 0 24px #00c2ffcc, 0 0 36px #0092c888',
+          }}
+        >
           Unlock the Secrets of Our Oceans
         </h1>
-        <p className="hero-tagline fade-in delay-300 text-2xl md:text-3xl max-w-xl mx-auto text-[#00c2ffcc] font-semibold leading-relaxed mb-14">
+        <p
+          className="hero-tagline fade-in delay-300 max-w-xl mx-auto mb-14"
+          style={{
+            fontFamily: "'Poppins', system-ui, sans-serif",
+            fontSize: '2rem',
+            fontWeight: 600,
+            color: 'white',
+            opacity: 0.85,
+            lineHeight: 1.6,
+            textShadow: '0 0 20px #1dcaffcc, 0 0 28px #0b60bdaa',
+          }}
+        >
           Harnessing advanced data analytics to understand,
           <br />
           protect, and explore Earth’s vital marine ecosystems.
@@ -240,25 +265,49 @@ const Intro = () => {
         <div className="mt-12 flex flex-wrap items-center justify-center gap-x-10 gap-y-8">
           <a
             href="#dashboard"
-            className="cta-btn rounded-full bg-[#004c66] text-[#a1e8ff] font-extrabold px-10 py-4 text-xl shadow-glow-button transform transition duration-400 hover:scale-110 hover:bg-[#007bb3] hover:text-[#e0f7ff] focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-[#0099ee]"
-            aria-label="Explore Data"
+            className="cta-btn rounded-full px-10 py-4 text-xl font-bold transition-transform"
+            style={{
+              backgroundColor: '#004c66',
+              color: 'white',
+              boxShadow: '0 0 24px #00b0ffcc, 0 0 40px #29aaff66',
+              fontFamily: "'Poppins', system-ui, sans-serif",
+              letterSpacing: '0.015em',
+              transition: 'background-color 0.3s ease, transform 0.3s ease',
+            }}
           >
             Explore Data
           </a>
           <a
             href="#chat"
-            className="cta-btn rounded-full bg-[#004c66] text-[#a1e8ff] font-extrabold px-10 py-4 text-xl shadow-glow-button transform transition duration-400 hover:scale-110 hover:bg-[#007bb3] hover:text-[#e0f7ff] focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-[#0099ee]"
-            aria-label="Query Global Ocean Data"
+            className="cta-btn rounded-full px-10 py-4 text-xl font-bold transition-transform"
+            style={{
+              backgroundColor: '#004c66',
+              color: 'white',
+              boxShadow: '0 0 24px #00b0ffcc, 0 0 40px #29aaff66',
+              fontFamily: "'Poppins', system-ui, sans-serif",
+              letterSpacing: '0.015em',
+              transition: 'background-color 0.3s ease, transform 0.3s ease',
+            }}
           >
             Query Global Ocean Data
           </a>
         </div>
         {/* Partners Section */}
         <section className="mt-24">
-          <h2 className="text-5xl font-semibold text-[#009ee6] mb-16 fade-in delay-600 drop-shadow-glow">
+          <h2
+            className="fade-in delay-600 mb-16"
+            style={{
+              fontFamily: "'Poppins', system-ui, sans-serif",
+              fontWeight: 700,
+              fontSize: '2.4rem',
+              color: 'white',
+              letterSpacing: '0.03em',
+              textShadow: '0 0 18px #18b8ff88, 0 0 28px #00aaff55',
+            }}
+          >
             Partners
           </h2>
-          <div className="flex justify-center flex-wrap gap-20 text-[#0099eecc] font-semibold tracking-wide select-none">
+          <div className="flex justify-center flex-wrap gap-20 font-semibold tracking-wide select-none">
             {[
               'OceanDataLab',
               'NOAA',
@@ -268,7 +317,13 @@ const Intro = () => {
               <a
                 key={i}
                 href={`#partner${i + 1}`}
-                className="partner-link relative inline-block text-2xl hover:text-[#00cfff] transition-colors duration-300 underline-effect"
+                className="partner-link relative inline-block text-2xl hover:text-white transition-colors duration-300 underline-effect"
+                style={{
+                  color: 'white',
+                  textShadow: '0 0 14px #00cfff99',
+                  fontFamily: "'Poppins', system-ui, sans-serif",
+                  marginBottom: '10px',
+                }}
               >
                 {partner}
               </a>
@@ -276,12 +331,20 @@ const Intro = () => {
           </div>
         </section>
         {/* Navigation Links */}
-        <nav className="quick-links mt-20 flex justify-center gap-16 text-[#0099eecc] font-bold">
+        <nav className="quick-links mt-20 flex justify-center gap-16 font-bold">
           {['about', 'data', 'dashboard'].map((navItem) => (
             <a
               key={navItem}
               href={`#${navItem}`}
-              className="nav-link relative px-6 py-3 rounded-full hover:text-[#005a8a] hover:bg-[#00bfff] transition-colors duration-300 cursor-pointer underline-effect"
+              className="nav-link relative px-6 py-3 rounded-full hover:text-[#00bfff] hover:bg-[#004c66] transition-colors duration-300 cursor-pointer underline-effect"
+              style={{
+                color: 'white',
+                fontFamily: "'Poppins', system-ui, sans-serif",
+                fontWeight: 700,
+                fontSize: '1.3rem',
+                letterSpacing: '0.025em',
+                textShadow: '0 0 10px #00cfff99',
+              }}
             >
               {navItem.charAt(0).toUpperCase() + navItem.slice(1)}
             </a>
@@ -307,16 +370,16 @@ const Intro = () => {
         }
         /* Glow shadows */
         .shadow-glow {
-          box-shadow: 0 0 55px #00cfffcc, 0 0 140px #001a2b inset;
+          box-shadow: 0 0 56px #00cfffcc, 0 0 180px #001a2b inset;
         }
         .shadow-glow-inner {
-          box-shadow: 0 0 38px #00aaffdd, 0 0 90px #007bb3aa inset;
+          box-shadow: 0 0 48px #00aaffdd, 0 0 98px #007bb3aa inset;
         }
         .shadow-glow-button {
-          box-shadow: 0 0 22px #00bbffdd, 0 0 40px #0077ccbb;
+          box-shadow: 0 0 22px #00bbffdd, 0 0 44px #0077ccbb;
         }
         .drop-shadow-glow {
-          filter: drop-shadow(0 0 15px #00aaffcc);
+          filter: drop-shadow(0 0 18px #00aaffcc);
         }
         /* Fade in */
         .fade-in {
@@ -336,20 +399,6 @@ const Intro = () => {
           to {
             opacity: 1;
           }
-        }
-        /* Text glow */
-        .text-glow {
-          text-shadow:
-            0 0 15px rgba(26, 142, 196, 0.9),
-            0 0 30px rgba(21, 121, 194, 0.8),
-            0 0 45px rgba(18, 103, 176, 0.7);
-          color: transparent;
-          background: linear-gradient(90deg, #0a8cd1, #187ec5, #0a8cd1);
-          background-clip: text;
-          -webkit-background-clip: text;
-          font-weight: 900;
-          user-select: none;
-          pointer-events: none;
         }
         /* Underline effect for links */
         .underline-effect::after {
