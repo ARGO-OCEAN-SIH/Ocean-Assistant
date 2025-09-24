@@ -1,20 +1,27 @@
 
 import './App.css';
+import Signup from './pages/Signup';
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';
 import VoiceAssistant from './pages/VoiceAssistant';
-import React, { useState } from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+
 
 function App() {
-  const [voiceMode, setVoiceMode] = useState(false);
-
   return (
-    <div className="App">
-      {voiceMode ? (
-        <VoiceAssistant onSwitchToChat={() => setVoiceMode(false)} />
-      ) : (
-        <Home onSwitchToVoice={() => setVoiceMode(true)} />
-      )}
-    </div>
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/voice" element={<VoiceAssistant />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
