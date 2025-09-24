@@ -1,55 +1,121 @@
 import React, { useState, useRef, useEffect } from "react";
+import {
+  sendMessage,
+  initWebSocket,
+  sendWebSocketMessage,
+  getExampleQueries,
+  checkBackendHealth,
+} from "../services/chatService";
 
 const ChatWindow = () => {
   const [messages, setMessages] = useState([
     { id: 1, text: "Welcome to Ocean Assistant!", sender: "system" },
     { id: 2, text: "How can I help you explore the ocean today?", sender: "system" },
-    { id: 3, text: "Show me ARGO float data for the Pacific.", sender: "user" },
-    { id: 4, text: "Fetching latest ARGO data for Pacific region...", sender: "system" },
-    { id: 5, text: "Here is the interactive map and chart.", sender: "system" },
-    { id: 6, text: "Thank you!", sender: "user" },
-    { id: 7, text: "You are welcome! 🌊", sender: "system" },
-    { id: 8, text: "Can you analyze recent trends in ocean temperature?", sender: "user" },
-    { id: 9, text: "Analyzing temperature trends...", sender: "system" },
-    { id: 10, text: "The average ocean temperature has risen by 0.13°C per decade.", sender: "system" },
-    { id: 11, text: "That is concerning. What can be done?", sender: "user" },
-    { id: 12, text: "Reducing carbon emissions and protecting marine ecosystems are key steps.", sender: "system" },
-    { id: 13, text: "Got it. Thanks for the info!", sender: "user" },
-    { id: 14, text: "Anytime! Let me know if you need more data.", sender: "system" },
-    { id: 15, text: "Will do. Bye for now!", sender: "user" },
-    { id: 16, text: "Goodbye! 🌊", sender: "system" },
-    { id: 17, text: "Can you show me ARGO float data for the Atlantic?", sender: "user" },
-    { id: 18, text: "Fetching latest ARGO data for Atlantic region...", sender: "system" },
-    { id: 19, text: "Here is the interactive map and chart.", sender: "system" },
-    { id: 20, text: "Goodbye! 🌊", sender: "system" },
   ]);
-
   const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isConnected, setIsConnected] = useState(false);
+  const [error, setError] = useState(null);
   const chatEndRef = useRef(null);
 
-  const handleSend = () => {
+  useEffect(() => {
+    // Initialize WebSocket connection
+    const cleanup = initWebSocket((data) => {
+      if (data.response) {
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { id: Date.now(), text: data.response, sender: "system" },
+        ]);
+      }
+    });
+
+    // Check backend health on mount
+    const checkHealth = async () => {
+      try {
+        await checkBackendHealth();
+        setIsConnected(true);
+      } catch (err) {
+        setError("Unable to connect to backend");
+        setIsConnected(false);
+      }
+    };
+
+    checkHealth();
+
+    return () => {
+      cleanup();
+    };
+  }, []);
+
+  const handleSend = async () => {
     if (!input.trim()) return;
-    setMessages([...messages, { id: messages.length + 1, text: input, sender: "user" }]);
+
+    // Add user message
+    const userMessage = { id: Date.now(), text: input, sender: "user" };
+    setMessages((prev) => [...prev, userMessage]);
     setInput("");
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      // Send message through WebSocket for real-time interaction
+      sendWebSocketMessage(input);
+
+      // Also send through REST API for processing
+      const response = await sendMessage(input);
+      
+      if (response) {
+        setMessages((prev) => [
+          ...prev,
+          { id: Date.now(), text: response.response || "No response from server", sender: "system" },
+        ]);
+      }
+    } catch (err) {
+      setError("Failed to send message. Please try again.");
+      console.error("Error sending message:", err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Load example queries on mount
+  useEffect(() => {
+    const loadExampleQueries = async () => {
+      try {
+        const examples = await getExampleQueries();
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: Date.now(),
+            text: "Here are some example queries you can try:\n" +
+                 examples.map(ex => `• ${ex.query}`).join("\n"),
+            sender: "system"
+          }
+        ]);
+      } catch (err) {
+        console.error("Failed to load example queries:", err);
+      }
+    };
+
+    loadExampleQueries();
+  }, []);
+
   return (
     <div className="flex flex-col h-screen max-h-screen bg-gray-900/80 backdrop-blur-md rounded-2xl shadow-xl border border-gray-700">
       {/* Header */}
-      <div className="px-4 py-2 border-b border-gray-700 text-lg font-semibold text-blue-400">
-        AI Assistant
+      <div className="px-4 py-2 border-b border-gray-700 flex justify-between items-center">
+        <span className="text-lg font-semibold text-blue-400">AI Assistant</span>
+        <span className={`text-sm ${isConnected ? 'text-green-400' : 'text-red-400'}`}>
+          {isConnected ? '🟢 Connected' : '🔴 Disconnected'}
+        </span>
       </div>
 
       {/* Messages */}
-      <div
-  className="flex-1 overflow-y-auto p-4 space-y-3 scrollbar-whatsapp"
->
-
-
+      <div className="flex-1 overflow-y-auto p-4 space-y-3 scrollbar-whatsapp">
         {messages.map((msg) => (
           <div
             key={msg.id}
@@ -69,6 +135,20 @@ const ChatWindow = () => {
             </div>
           </div>
         ))}
+        {isLoading && (
+          <div className="flex justify-start">
+            <div className="px-4 py-2 rounded-2xl text-sm shadow-md bg-gray-700 text-gray-100 rounded-bl-none">
+              Thinking...
+            </div>
+          </div>
+        )}
+        {error && (
+          <div className="flex justify-center">
+            <div className="px-4 py-2 rounded-2xl text-sm shadow-md bg-red-600/20 text-red-400">
+              {error}
+            </div>
+          </div>
+        )}
         <div ref={chatEndRef} />
       </div>
 
@@ -79,16 +159,21 @@ const ChatWindow = () => {
           placeholder="Type your message..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSend()}
+          onKeyDown={(e) => e.key === "Enter" && !isLoading && handleSend()}
           className="flex-1 bg-gray-900/70 text-gray-200 px-4 py-2 rounded-xl 
                      focus:outline-none focus:ring-2 focus:ring-blue-500"
+          disabled={isLoading}
         />
         <button
           onClick={handleSend}
-          className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-xl 
-                     text-white font-medium transition shadow-lg"
+          disabled={isLoading}
+          className={`px-4 py-2 rounded-xl text-white font-medium transition shadow-lg
+                     ${isLoading 
+                       ? 'bg-gray-600 cursor-not-allowed'
+                       : 'bg-blue-600 hover:bg-blue-700'
+                     }`}
         >
-          Send
+          {isLoading ? 'Sending...' : 'Send'}
         </button>
       </div>
     </div>
