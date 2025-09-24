@@ -1,20 +1,5 @@
 import React, { useEffect, useState } from 'react';
 
-const floatingTextsLeft = [
-  { id: 1, text: 'Data', style: { top: '10%', left: '10%' } },
-  { id: 3, text: 'AI', style: { top: '30%', left: '5%' } },
-  { id: 6, text: 'Marine', style: { top: '50%', left: '12%' } },
-  { id: 9, text: 'Protection', style: { top: '70%', left: '10%' } },
-];
-
-const floatingTextsRight = [
-  { id: 2, text: 'Oceans', style: { top: '15%', right: '12%' } },
-  { id: 4, text: 'Insights', style: { top: '40%', right: '15%' } },
-  { id: 5, text: 'Explore', style: { top: '60%', right: '10%' } },
-  { id: 7, text: 'Ecosystems', style: { top: '80%', right: '12%' } },
-  { id: 8, text: 'Sustainability', style: { top: '90%', right: '15%' } },
-];
-
 const floatingGraphicsLeft = [
   {
     id: 1,
@@ -123,7 +108,7 @@ const Intro = () => {
   useEffect(() => {
     let direction = 1;
     const interval = setInterval(() => {
-      setOffset((old) => {
+      setOffset(old => {
         if (old > 20) direction = -1;
         else if (old < -20) direction = 1;
         return old + direction;
@@ -134,7 +119,7 @@ const Intro = () => {
 
   return (
     <div
-      className="relative isolate min-h-screen px-6 pt-14 lg:px-8 overflow-x-hidden overflow-visible select-none"
+      className="relative isolate min-h-screen px-6 pt-14 lg:px-8 overflow-hidden select-none"
       style={{
         fontFamily: "'Poppins', system-ui, sans-serif",
         backgroundImage: "url('https://wallpapercave.com/wp/wp2074532.jpg')",
@@ -142,87 +127,89 @@ const Intro = () => {
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         backgroundAttachment: 'fixed',
-        color: 'white', // Ensure all text is white by default
+        color: 'white',
       }}
     >
-      {/* Floating texts left side */}
-      {floatingTextsLeft.map(({ id, text, style }) => (
-        <span
-          key={id}
-          className="absolute pointer-events-none floating-text"
-          style={{
-            ...style,
-            fontWeight: 700,
-            fontSize: '2.3rem',
-            letterSpacing: '0.1em',
-            color: 'white',
-            textShadow: '0 0 12px #ffffffcc, 0 0 20px #b0e7ffcc',
-            transform: `translateY(${Math.sin((offset + id * 20) / 10) * 8}px) rotate(${(offset + id * 40) / 10}deg)`,
-            userSelect: 'none',
-          }}
-        >
-          {text}
-        </span>
-      ))}
-      {/* Floating texts right side */}
-      {floatingTextsRight.map(({ id, text, style }) => (
-        <span
-          key={id}
-          className="absolute pointer-events-none floating-text"
-          style={{
-            ...style,
-            fontWeight: 700,
-            fontSize: '2.3rem',
-            letterSpacing: '0.1em',
-            color: 'white',
-            textShadow: '0 0 12px #ffffffcc, 0 0 20px #b0e7ffcc',
-            transform: `translateY(${Math.sin((offset + id * 20) / 12) * 8}px) rotate(${(offset + id * 40) / 12}deg)`,
-            userSelect: 'none',
-          }}
-        >
-          {text}
-        </span>
-      ))}
+      {/* Animated glowing blobs */}
+      <div
+        className="absolute rounded-full bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600 opacity-40 blur-3xl mix-blend-screen animate-float-slow"
+        style={{
+          width: 280,
+          height: 280,
+          top: '10%',
+          left: '15%',
+          animationDelay: '0s',
+          animationTimingFunction: 'ease-in-out',
+        }}
+      />
+      <div
+        className="absolute rounded-full bg-gradient-to-tr from-indigo-400 via-cyan-400 to-blue-600 opacity-30 blur-2xl mix-blend-screen animate-float-slow"
+        style={{
+          width: 240,
+          height: 240,
+          top: '65%',
+          left: '20%',
+          animationDelay: '4s',
+          animationTimingFunction: 'ease-in-out',
+        }}
+      />
+      <div
+        className="absolute rounded-full bg-gradient-to-tr from-blue-400 via-cyan-500 to-indigo-600 opacity-20 blur-3xl mix-blend-screen animate-float-slow"
+        style={{
+          width: 300,
+          height: 300,
+          top: '40%',
+          right: '10%',
+          animationDelay: '7s',
+          animationTimingFunction: 'ease-in-out',
+        }}
+      />
+
       {/* Floating graphics left side */}
       {floatingGraphicsLeft.map(({ id, svg, baseStyle }) => (
         <div
           key={id}
-          className="absolute pointer-events-none"
+          className="absolute pointer-events-none animate-soft-float"
           style={{
             top: baseStyle.top,
             left: baseStyle.left,
             transform: zigzagTransform(offset, id),
             userSelect: 'none',
             filter: 'drop-shadow(0 0 10px #ffffffcc)',
-            transition: 'transform 0.1s ease-out',
+            transition: 'transform 0.15s ease-out',
+            animationDelay: `${id * 1.5}s`,
           }}
         >
           {svg}
         </div>
       ))}
+
       {/* Floating graphics right side */}
       {floatingGraphicsRight.map(({ id, svg, baseStyle }) => (
         <div
           key={id}
-          className="absolute pointer-events-none"
+          className="absolute pointer-events-none animate-soft-float"
           style={{
             top: baseStyle.top,
             right: baseStyle.right,
             transform: zigzagTransform(offset, id),
             userSelect: 'none',
             filter: 'drop-shadow(0 0 10px #ffffffcc)',
-            transition: 'transform 0.1s ease-out',
+            transition: 'transform 0.15s ease-out',
+            animationDelay: `${id * 1.5 + 0.75}s`,
           }}
         >
           {svg}
         </div>
       ))}
-      {/* Glowing globe visual */}
+
+      {/* Central glowing orb */}
       <div
         aria-hidden="true"
         className="mx-auto mt-20 w-[180px] h-[180px] rounded-full bg-gradient-radial from-[#00d4ff] to-[#001f2a] shadow-glow animate-float-rotate delay-150"
         style={{
           boxShadow: '0 0 56px #00d4ffcc, 0 0 160px #001927 inset',
+          animationTimingFunction: 'ease-in-out',
         }}
       >
         <div
@@ -232,6 +219,8 @@ const Intro = () => {
           }}
         />
       </div>
+
+      {/* Main Content */}
       <div className="mx-auto max-w-2xl text-center py-20 sm:py-28 lg:py-36 relative z-20">
         <h1
           className="hero-title fade-in mb-8 leading-tight"
@@ -353,7 +342,19 @@ const Intro = () => {
       </div>
 
       <style jsx>{`
-        /* Floating and rotating globe animation */
+        @keyframes floatPulse {
+          0%, 100% {
+            transform: translateY(0) scale(1);
+            opacity: 0.35;
+          }
+          50% {
+            transform: translateY(-15px) scale(1.1);
+            opacity: 0.6;
+          }
+        }
+        .animate-float-slow {
+          animation: floatPulse 8s ease-in-out infinite;
+        }
         @keyframes floatRotate {
           0% {
             transform: translateY(0px) rotate(0deg);
