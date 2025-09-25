@@ -22,7 +22,7 @@ const Signup = () => {
       className="flex flex-col min-h-screen text-white selection:bg-cyan-500 selection:text-gray-900"
       style={{
         backgroundImage:
-          "url('https://cdn.pixabay.com/photo/2014/02/26/21/25/jellyfish-275577_1280.jpg')",
+          "url('https://wallpapercave.com/wp/wp2074532.jpg')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
