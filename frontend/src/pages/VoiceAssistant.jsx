@@ -6,29 +6,6 @@ import { ReactMic } from "react-mic";
 
 const genAI = new GoogleGenerativeAI("AIzaSyCid1kiX5wUgPinFZ9ij76hPuKW_WuxmyA");
 
-// Floating texts for left and right sides
-const floatingTextsLeft = [
-  { id: 1, text: "Data", style: { top: "10%", left: "10%", color: "#18b8ff" } },
-  { id: 3, text: "AI", style: { top: "30%", left: "5%", color: "#1df3ff" } },
-  { id: 6, text: "Marine", style: { top: "50%", left: "12%", color: "#1df3ff" } },
-  { id: 9, text: "Protection", style: { top: "70%", left: "10%", color: "#1df3ff" } },
-];
-const floatingTextsRight = [
-  { id: 2, text: "Oceans", style: { top: "15%", right: "12%", color: "#63e2ff" } },
-  { id: 4, text: "Insights", style: { top: "40%", right: "15%", color: "#18b8ff" } },
-  { id: 5, text: "Explore", style: { top: "60%", right: "10%", color: "#63e2ff" } },
-  { id: 7, text: "Ecosystems", style: { top: "80%", right: "12%", color: "#18b8ff" } },
-  { id: 8, text: "Sustainability", style: { top: "90%", right: "15%", color: "#63e2ff" } },
-];
-
-// Zigzag transform function for dynamic floating effect
-const zigzagTransform = (offset, id) => {
-  const xMove = Math.sin((offset + id * 50) / 15) * 20;
-  const yMove = Math.cos((offset + id * 30) / 10) * 12;
-  const rotate = (offset + id * 40) / 15;
-  return `translate(${xMove}px, ${yMove}px) rotate(${rotate}deg)`;
-};
-
 const VoiceAssistant = () => {
   const [transcript, setTranscript] = useState("");
   const [response, setResponse] = useState("");
@@ -39,20 +16,8 @@ const VoiceAssistant = () => {
 
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
-  const [offset, setOffset] = useState(0);
-
-  // Continuous update for animated floating texts
-  useEffect(() => {
-    let direction = 1;
-    const interval = setInterval(() => {
-      setOffset((old) => {
-        if (old > 20) direction = -1;
-        else if (old < -20) direction = 1;
-        return old + direction;
-      });
-    }, 80);
-    return () => clearInterval(interval);
-  }, []);
+  // Continuous update for animated background bubbles (if needed)
+  // No floating text offset needed
 
   const startListening = () => {
     if (!SpeechRecognition) return alert("Speech Recognition not supported in this browser.");
@@ -114,7 +79,7 @@ const VoiceAssistant = () => {
       className="min-h-screen flex flex-col text-white selection:bg-cyan-400 selection:text-gray-900 relative overflow-hidden"
       style={{
         backgroundImage:
-          "url('https://cdn.pixabay.com/photo/2014/02/26/21/25/jellyfish-275577_1280.jpg')",
+          "url('https://wallpapercave.com/wp/wp2074532.jpg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -122,52 +87,24 @@ const VoiceAssistant = () => {
       }}
     >
       <Navbar />
-      {/* Floating texts - Left */}
-      {floatingTextsLeft.map(({ id, text, style }) => (
-        <span
-          key={id}
-          className="absolute font-extrabold text-glow text-2xl select-none pointer-events-none"
-          style={{
-            ...style,
-            transform: `translateY(${Math.sin((offset + id * 20) / 10) * 8}px) rotate(${(offset + id * 40) / 10}deg)`,
-            whiteSpace: "nowrap",
-          }}
-        >
-          {text}
-        </span>
-      ))}
-      {/* Floating texts - Right */}
-      {floatingTextsRight.map(({ id, text, style }) => (
-        <span
-          key={id}
-          className="absolute font-extrabold text-glow text-2xl select-none pointer-events-none"
-          style={{
-            ...style,
-            transform: `translateY(${Math.sin((offset + id * 20) / 12) * 8}px) rotate(${(offset + id * 40) / 12}deg)`,
-            whiteSpace: "nowrap",
-          }}
-        >
-          {text}
-        </span>
-      ))}
+      {/* Background glowing animated circles */}
+      <div
+        aria-hidden="true"
+        className="absolute -top-20 -left-20 w-56 h-56 bg-cyan-400 rounded-full opacity-20 blur-3xl animate-pulse-slow mix-blend-screen z-0"
+        style={{ animationDuration: "8s" }}
+      />
+      <div
+        aria-hidden="true"
+        className="absolute -bottom-20 -right-10 w-72 h-72 bg-indigo-600 rounded-full opacity-30 blur-3xl animate-pulse-slow mix-blend-screen z-0"
+        style={{ animationDuration: "10s" }}
+      />
+      <div
+        aria-hidden="true"
+        className="absolute top-1/2 left-[25%] w-32 h-32 bg-blue-700 rounded-full opacity-25 blur-2xl animate-pulse-slow mix-blend-screen z-0"
+        style={{ animationDuration: "12s" }}
+      />
       {/* Main Section */}
       <main className="flex-1 flex flex-col justify-center items-center px-6 py-12 sm:py-20 relative max-w-xl mx-auto w-full gap-10 z-10">
-        {/* Background glowing animated circles */}
-        <div
-          aria-hidden="true"
-          className="absolute -top-20 -left-20 w-56 h-56 bg-cyan-400 rounded-full opacity-20 blur-3xl animate-pulse-slow mix-blend-screen z-0"
-          style={{ animationDuration: "8s" }}
-        />
-        <div
-          aria-hidden="true"
-          className="absolute -bottom-20 -right-10 w-72 h-72 bg-indigo-600 rounded-full opacity-30 blur-3xl animate-pulse-slow mix-blend-screen z-0"
-          style={{ animationDuration: "10s" }}
-        />
-        <div
-          aria-hidden="true"
-          className="absolute top-1/2 left-[25%] w-32 h-32 bg-blue-700 rounded-full opacity-25 blur-2xl animate-pulse-slow mix-blend-screen z-0"
-          style={{ animationDuration: "12s" }}
-        />
         {/* Voice control panel */}
         <section className="relative bg-gray-900/70 border border-cyan-500 rounded-3xl shadow-2xl p-10 w-full backdrop-blur-md space-y-8 max-w-xl z-10">
           <div className="flex justify-center">
@@ -205,18 +142,6 @@ const VoiceAssistant = () => {
         © 2025 Ocean Assistant | Powered by ARGO & AI
       </footer>
       <style jsx>{`
-        @keyframes gradient-x {
-          0%, 100% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-        }
-        .animate-gradient-x {
-          background-size: 200% 200%;
-          animation: gradient-x 12s ease infinite;
-        }
         .animate-pulse-slow {
           animation: pulse 6s ease-in-out infinite;
         }
