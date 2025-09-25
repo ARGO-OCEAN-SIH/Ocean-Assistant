@@ -18,26 +18,26 @@ export default function Teams() {
   };
 
   return (
-   <div
-  id="teams-section"
-  className="py-24 sm:py-32 px-6 sm:px-12 lg:px-24 text-[#ccefff] font-sans select-none"
-  style={{
-    backgroundImage: `url('https://cdn.pixabay.com/photo/2014/02/26/21/25/jellyfish-275577_1280.jpg')`,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat',
-    backgroundAttachment: 'fixed',
-    minHeight: '100vh',
-    width: '100%',
-  }}
->
-
+    <div
+      id="teams-section"
+      className="py-24 sm:py-32 px-6 sm:px-12 lg:px-24 font-sans select-none"
+      style={{
+        backgroundImage: `url('https://wallpapercave.com/wp/wp2074532.jpg')`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
+        minHeight: "100vh",
+        width: "100%",
+        color: "white",
+      }}
+    >
       <div className="mx-auto max-w-7xl">
         <div className="max-w-xl mx-auto text-center">
-          <h2 className="text-4xl font-extrabold tracking-tight text-cyan-400 drop-shadow-lg sm:text-5xl mb-6">
+          <h2 className="text-4xl font-extrabold tracking-tight drop-shadow-lg sm:text-5xl mb-6 text-white">
             Meet Our Stellar Team
           </h2>
-          <p className="text-cyan-200">
+          <p className="text-white">
             Passionate minds united to revolutionize ocean data understanding with AI-powered innovations.
           </p>
         </div>
@@ -78,8 +78,8 @@ export default function Teams() {
                   </div>
                 )}
               </div>
-              <h3 className="mt-8 text-xl font-semibold text-white tracking-wide">{name}</h3>
-              <p className="mt-1 text-cyan-400">{role}</p>
+              <h3 className="mt-8 text-xl font-semibold tracking-wide text-white">{name}</h3>
+              <p className="mt-1 text-white">{role}</p>
               <button
                 type="button"
                 onClick={() => toggleContact(name)}
@@ -92,8 +92,8 @@ export default function Teams() {
           ))}
         </ul>
         <section className="max-w-3xl mx-auto text-center mt-20 border-t border-cyan-600 pt-6">
-          <h3 className="text-xl font-semibold text-cyan-400 drop-shadow-lg">Team: NovaMinds</h3>
-          <p className="text-cyan-300">SIH Problem Statement ID: SIH25040</p>
+          <h3 className="text-xl font-semibold drop-shadow-lg text-white">Team: NovaMinds</h3>
+          <p className="text-white">SIH Problem Statement ID: SIH25040</p>
         </section>
       </div>
       <style jsx>{`
