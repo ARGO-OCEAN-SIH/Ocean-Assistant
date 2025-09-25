@@ -203,23 +203,6 @@ const Intro = () => {
         </div>
       ))}
 
-      {/* Central glowing orb */}
-      <div
-        aria-hidden="true"
-        className="mx-auto mt-20 w-[180px] h-[180px] rounded-full bg-gradient-radial from-[#00d4ff] to-[#001f2a] shadow-glow animate-float-rotate delay-150"
-        style={{
-          boxShadow: '0 0 56px #00d4ffcc, 0 0 160px #001927 inset',
-          animationTimingFunction: 'ease-in-out',
-        }}
-      >
-        <div
-          className="absolute top-[16px] left-[16px] w-[148px] h-[148px] rounded-full border-4 border-[#00bfff] shadow-glow-inner opacity-70"
-          style={{
-            filter: 'drop-shadow(0 0 14px #0099eecc)',
-          }}
-        />
-      </div>
-
       {/* Main Content */}
       <div className="mx-auto max-w-2xl text-center py-20 sm:py-28 lg:py-36 relative z-20">
         <h1
@@ -369,7 +352,6 @@ const Intro = () => {
         .animate-float-rotate {
           animation: floatRotate 8s ease-in-out infinite;
         }
-        /* Glow shadows */
         .shadow-glow {
           box-shadow: 0 0 56px #00cfffcc, 0 0 180px #001a2b inset;
         }
@@ -382,7 +364,6 @@ const Intro = () => {
         .drop-shadow-glow {
           filter: drop-shadow(0 0 18px #00aaffcc);
         }
-        /* Fade in */
         .fade-in {
           opacity: 0;
           animation-fill-mode: forwards;
@@ -401,7 +382,6 @@ const Intro = () => {
             opacity: 1;
           }
         }
-        /* Underline effect for links */
         .underline-effect::after {
           content: '';
           position: absolute;
