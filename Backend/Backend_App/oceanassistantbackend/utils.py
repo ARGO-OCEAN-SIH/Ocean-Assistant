@@ -19,24 +19,32 @@ def should_use_database(user_query):
     return False
 
 def format_database_response(user_query, db_results):
-    """Convert database results to natural language"""
     if not db_results or not isinstance(db_results, list):
         return "I couldn't find any ocean data matching your query."
-    
-    sample = db_results[0]
-    response = f"🌊 **Ocean Data Analysis**\n\n"
-    response += f"📊 Found **{len(db_results)} measurements** matching your query\n"
-    
-    if 'latitude' in sample and 'longitude' in sample:
-        response += f"📍 **Location**: {sample['latitude']}°N, {sample['longitude']}°E\n"
-    
-    if 'temperature' in sample:
-        response += f"🌡️ **Temperature**: {sample['temperature']}°C\n"
-    
-    if 'salinity' in sample:
-        response += f"🧂 **Salinity**: {sample['salinity']} PSU\n"
-    
-    response += f"\n💡 *Based on real Argo float measurements*"
+
+    response = f"🌊 Ocean Data Analysis\n\n"
+    response += f"📊 Found {len(db_results)} measurements matching your query\n\n"
+
+    # Show first 3 results instead of only 1
+    for i, sample in enumerate(db_results[:3]):
+        response += f"--- Measurement {i+1} ---\n"
+
+        if 'latitude' in sample and 'longitude' in sample:
+            response += f"📍 Location: {sample['latitude']}°, {sample['longitude']}°\n"
+
+        if 'temperature' in sample:
+            response += f"🌡️ Temperature: {sample['temperature']} °C\n"
+
+        if 'salinity' in sample:
+            response += f"🧂 Salinity: {sample['salinity']} PSU\n"
+
+        if 'pressure' in sample:
+            response += f"⬇️ Pressure: {sample['pressure']} dbar\n"
+
+        response += "\n"
+
+    response += "💡 Based on real Argo float measurements"
+
     return response
 
 def get_response(user_query):
@@ -61,7 +69,7 @@ def get_response(user_query):
                 return {"response": llm_result["response"], "source": "llm"}
                 
         except Exception as e:
-            # Error fallback to LLM
+            # Error fallback to LLaaaM
             llm_result = free_processor.process_text(cleaned_query)
             return {"response": llm_result["response"], "source": "llm_error"}
     

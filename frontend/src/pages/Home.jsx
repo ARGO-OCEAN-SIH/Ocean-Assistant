@@ -1,34 +1,24 @@
-import React from 'react';
-import ChatWindow from '../components/ChatWindow';
-import MapVisualization from '../components/MapVisualization';
-import ChartVisualization from '../components/ChartVisualization';
+'use client'
 
-const Home = ({ onSwitchToVoice }) => (
-  <div className="home-page sci-fi-bg">
-    <header className="sci-fi-header">
-      <h1 className="sci-fi-title">🌌 Ocean Assistant</h1>
-      <p className="sci-fi-subtitle">Explore the depths with futuristic AI</p>
-      <button className="voice-mode-btn" onClick={onSwitchToVoice}>
-        🎙️ Switch to Voice Assistant Mode
-      </button>
-    </header>
-    <main className="sci-fi-main-grid">
-      <section className="sci-fi-chat-section">
-        <ChatWindow />
-      </section>
-      <section className="sci-fi-visual-section">
-        <div className="map-area">
-          <MapVisualization />
-        </div>
-        <div className="chart-area">
-          <ChartVisualization />
-        </div>
-      </section>
-    </main>
-    <footer className="sci-fi-footer">
-      <span>© 2025 Ocean Assistant | Powered by ARGO & AI</span>
-    </footer>
-  </div>
-);
+import { useState } from 'react'
+import Feature from '../components/Feature'
+import Navbar from '../components/Navbar'
+import Intro from '../components/Intro'
+import Content from '../components/Content'
+import Teams from '../components/Teams'
 
-export default Home;
+
+export default function Home() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  return (
+    <div className="bg-gray-900">
+     <Navbar />
+     <Intro />
+     <hr />
+      <Feature />
+      <Content/>
+      <Teams/>
+    </div>
+  )
+}

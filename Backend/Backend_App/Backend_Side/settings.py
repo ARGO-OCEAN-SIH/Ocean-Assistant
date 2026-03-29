@@ -23,6 +23,7 @@ GROQ_API_KEY = os.environ.get('GROQ_API_KEY', '')
 
 # Application definition
 INSTALLED_APPS = [
+    "corsheaders",
     "rest_framework",
     "channels",
     'oceanassistantbackend',
@@ -35,6 +36,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -63,7 +65,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Backend_Side.wsgi.application'
 ASGI_APPLICATION = "Backend_Side.asgi.application"
-
+CORS_ALLOW_ALL_ORIGINS = True 
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels.layers.InMemoryChannelLayer",
