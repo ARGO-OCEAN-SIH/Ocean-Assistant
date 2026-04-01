@@ -9,7 +9,7 @@ const navigation = [
   { name: 'Home', href: '/home' },
   { name: 'Dashboard', href: '/' },
   { name: 'Voice Assistant', href: '/voice' },
-  { name: 'About', href: '#feature', targetId: 'feature-section' },
+  { name: 'About', href: '/about'},
   { name: 'Team', href: '#teams', targetId: 'teams-section' },
 ]
 
@@ -66,7 +66,7 @@ export default function Navbar() {
                 key={item.name}
                 href={item.href}
                 onClick={(e) => handleNavClick(item, e)}
-                className="text-sm font-semibold text-white hover:text-blue-400"
+                className="text-sm font-semibold  hover:text-blue-400"
               >
                 {item.name}
               </a>
@@ -74,7 +74,7 @@ export default function Navbar() {
               <Link
                 key={item.name}
                 to={item.href}
-                className="text-sm font-semibold text-white hover:text-blue-400"
+                className="text-sm font-semibold hover:text-blue-400"
               >
                 {item.name}
               </Link>
@@ -86,7 +86,7 @@ export default function Navbar() {
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           <Link
             to="/login"
-            className="text-sm font-semibold text-white hover:text-blue-400 focus:outline-none"
+            className="text-sm font-semibold text-white r:text-blue-400 focus:outline-none"
           >
             Log in <span aria-hidden="true">&rarr;</span>
           </Link>
@@ -123,7 +123,7 @@ export default function Navbar() {
                   key={item.name}
                   href={item.href}
                   onClick={(e) => handleNavClick(item, e)}
-                  className="block rounded-lg px-3 py-2 text-base font-semibold text-white hover:bg-white/5"
+                  className="block rounded-lg px-3 py-2 text-base font-semibold hover:bg-white/5"
                 >
                   {item.name}
                 </a>
@@ -132,7 +132,7 @@ export default function Navbar() {
                   key={item.name}
                   to={item.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block rounded-lg px-3 py-2 text-base font-semibold text-white hover:bg-white/5"
+                  className="block rounded-lg px-3 py-2 text-base font-semibold hover:bg-white/5"
                 >
                   {item.name}
                 </Link>
@@ -141,7 +141,7 @@ export default function Navbar() {
             <Link
               to="/login"
               onClick={() => setMobileMenuOpen(false)}
-              className="block rounded-lg px-3 py-2.5 text-base font-semibold text-white hover:bg-white/5 w-full text-left"
+              className="block rounded-lg px-3 py-2.5 text-base font-semibold hover:bg-white/5 w-full text-left"
             >
               Log in
             </Link>
