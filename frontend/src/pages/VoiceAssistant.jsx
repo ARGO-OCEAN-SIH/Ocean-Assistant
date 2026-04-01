@@ -3,6 +3,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { ReactMic } from "react-mic";
+import VoiceManager from "./VoiceManager";
 
 // ✅ Initialize Gemini SDK
 const genAI = new GoogleGenerativeAI("AIzaSyCid1kiX5wUgPinFZ9ij76hPuKW_WuxmyA");
@@ -82,58 +83,12 @@ const VoiceAssistant = () => {
       setResponse("Error contacting AI");
     }
   };
-
-  return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-indigo-950 to-black text-white">
-      <Navbar />
-
-      {/* Main Section */}
-      <main className="flex-1 flex justify-center items-center px-4">
-        <section className="bg-gray-800/60 border border-gray-700 rounded-xl shadow-2xl p-8 max-w-xl w-full space-y-6 backdrop-blur">
-          {/* 🎤 Mic Button */}
-          <div className="flex justify-center">
-            <button
-              onClick={listening ? stopListening : startListening}
-              className={`px-6 py-3 text-lg rounded-full font-semibold shadow-lg transition ${
-                listening
-                  ? "bg-red-600 hover:bg-red-500"
-                  : "bg-cyan-600 hover:bg-cyan-500"
-              }`}
-            >
-              {listening ? "🛑 Stop Listening" : "🎤 Start Voice"}
-            </button>
-          </div>
-
-          {/* 🌊 Dynamic Waveform */}
-          <div className="flex justify-center">
-            <div className="w-full h-32 bg-black/40 rounded-lg border border-cyan-600 overflow-hidden">
-              <ReactMic
-                record={listening}
-                className="w-full h-full"
-                strokeColor="#00f5ff"
-                backgroundColor="transparent"
-              />
-            </div>
-          </div>
-
-          {/* 📝 User Transcript */}
-          <div className="p-4 rounded-lg bg-indigo-900/50 border border-indigo-600 text-cyan-300 min-h-[60px]">
-            {transcript || "Say something..."}
-          </div>
-
-          {/* 🤖 AI Response */}
-          <div className="p-4 rounded-lg bg-black/50 border border-green-600 text-green-400 min-h-[60px]">
-            {response || "AI response will appear here..."}
-          </div>
-        </section>
-      </main>
-
-      {/* Footer */}
-      <footer className="py-4 text-center text-gray-500 text-sm border-t border-gray-700 mt-8">
-        © 2025 Ocean Assistant | Powered by ARGO & AI
-      </footer>
+   return (
+    <div>
+      <Navbar/>
+    <VoiceManager/>
     </div>
-  );
+   );
 };
 
 export default VoiceAssistant;
