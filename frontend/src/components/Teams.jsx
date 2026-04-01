@@ -1,10 +1,9 @@
 const people = [
   { name: 'Dhruv Chaudhary', role: 'Leader' },
-  { name: 'Akash Yadav', role: 'Full Stack Developer' },
   { name: 'Chitransh Gaur', role: 'Backend Developer' },
-  { name: 'Ashutosh Kumar', role: 'Front-end Developer' },
-  { name: 'Bhumika Jain', role: 'Designer' },
-  { name: 'Diksha Shisodia', role: 'Frontend Developer' },
+  { name: 'Dhruv Gupta', role: 'Backend Developer' },
+  { name: 'Manya Nigam', role: 'Designer' },
+  { name: 'Diksha Sisodia', role: 'Frontend Developer' },
 ]
 
 export default function Teams() {
